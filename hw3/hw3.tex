@@ -1,0 +1,170 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\title{APKC - Homework 3}
+\author{Sebastien Duc}
+\date{\today}
+
+\newcommand {\zpz}[1]{\mathbb{Z}/#1\mathbb{Z}}
+\newcommand {\ord}{\mathrm{ord}}
+
+\begin{document}
+\maketitle
+
+\section*{3.1}
+
+Let us prove first that $d = ax+by$, where $d = \gcd(a,b)$ and $x,y$ are integers.
+Let us define the set $L_{a,b} = \{l\in\mathbb{N}\setminus\{0\}:l = ax + by \land x,y\in\mathbb{Z}\}$.
+First we notice that $L_{a,b}$ is not the empty set because $a \in L_{a,b}$ (by taking $x = 1$ and $y = 0$).
+
+Thus we can consider the smallest element $l_{min} = ua +vb$ in $L_{a,b}$.
+We want to prove that any $l \in L_{a,b}$, $l_{min} | l$.
+For any $l \in L_{a,b}$ (i.e. $l = ia+jb$) we can apply the euclidean division: $l = ql_{min} + r$, $0 \leq r \leq l_{min}$.
+Suppose by contradiction that $l_{min} \nmid l$. Thus $0 < r$ and
+\[
+    \begin{split}
+        r &= l - ql_{min} = ia +jb - q(ua +vb)\\
+          &= (i - qu)a + (j-av)b\\
+    \end{split}
+\]
+Therefore $r\in L_{a,b}$. But $r < d$, which contradicts the minimality of $d$. Thus $\forall l \in L_{a,b}$, $l_{min} \mid l$.
+
+Now since $a \in L_{a,b}$, $l_{min} | a$. Similarly if $b > 0$, $b \in L_{a,b}$ (by taking $x = 0$ and $y = 1$) and $l_{min} | b$.
+So $1 \leq l_{min} \leq d = \gcd(a,b)$. Furthermore $d | a$ and $d | b$. Therefore $d | l$ for all $l \in L_{a,b}$ and in particular $d | l_{min}$.
+Thus $d \leq l_{min}$ and we conclude that $d = l_{min} = ua + vb$. 
+Note that at some point we assumed that $b > 0$. If $b = 0$ then trivially $\gcd(a,b) = a$ and $\gcd(a,b) = 1\cdot a + x\cdot b$ for any $x\in\mathbb{Z}$.
+
+Now we can show that $a,b$ are coprime if and only if $a$ is invertible modulo $b$ (and vice versa).
+Indeed, $a,b$ are coprime if and only if $\gcd(a,b) = 1$.
+But if $1 = \gcd(a,b)$, we just showed that $1 = ax +by$ where $x,y$ are integers. By taking this equation modulo $b$ we find that
+$ax \equiv 1 \pmod b$ and thus $a$ is invertible mod $b$. Similarly by taking the equation modulo $a$ we find that $b$ is invertible modulo $a$.
+Now if $a$ is invertible modulo $b$ there exists $x$ such that $ax \equiv 1 \pmod b$. Then we have $ax + kb = 1$. Suppose that 
+$\gcd(a,b) = d$, we have $a = ud$ and $b = vd$. Thus $udx + kvd = 1$ iff $(ux +kv)d = 1$. This means that $d$ divides 1. 
+Therefore $d = 1$. The same argument applies when $b$ is invertible modulo $a$.  
+
+
+\section*{3.2}
+
+\subsection*{(i)}
+A field is defined by the tuple $(F,+,*,0,1)$, $F$ being a set, $+:R \times R \rightarrow R$, $*:R \times R \rightarrow R$, $0 \in F$ and $1 \in F$.
+To be a field they must satisfy the following axioms:
+\begin{enumerate}
+    \item $\forall a,b \in F$, $a+b \in F$
+    \item $\forall a,b,c \in F$, $a+(b+c) = (a+b)+c$
+    \item $\forall a \in F$, $0+a = a+0 = a$
+    \item $\forall a \in F, \exists b \in F$ s.t. $a + b = b + a = 0$
+    \item $\forall a,b \in F$, $a+b = b+a$
+    \item $\forall a,b \in F$, $a*b \in F$
+    \item $\forall a,b,c \in F$, $a*(b*c) = (a*b)*c$
+    \item $\forall a \in F$, $1*a = a*1 = a$
+    \item $\forall a,b,c \in F$, $a*(b+c) = (a*b) + (a*c)$
+    \item $\forall a,b,c \in F$, $(a+b)*c = (a*c) + (b*c)$
+    \item $\forall a,b \in F$, $a*b = b*a$
+    \item $\forall a \in F \setminus\{0\}, \exists b \in F$ s.t. $ a*b = b*a = 1$
+\end{enumerate}
+
+Let us show that $(\zpz{p},+,*,0,1)$ is a field, $+$ (resp. $*$) being the addition (resp. multiplication) modulo $p$.
+Axioms 1,2,3,4,5,6,7,8,9,10,11 are trivially satisfied because they result from properties of addition/multiplication modulo $p$. We need to prove that every non zero element is invertible. 
+Let $x \in F \setminus \{0\}$, since $p$  is prime $\gcd(x,p) = 1$. By applying 3.1 we find that $x$ is invertible mod $p$. 
+Therefore $\zpz{p}$ is a field.
+
+\subsection*{(ii)}
+
+Let's consider all elements $x\in \mathbb{N}, 1 \leq x \leq p-1$ s.t. $\gcd(x,p-1) = d$.
+We know that $\gcd(x,p-1) = d$ iff $\exists k,l \in \mathbb{N}$ s.t. $x = kd$, $p-1 = ld$ and $\gcd(k,l) = 1$.
+Therefore the number of such elements $x$ is equal to the number of elements $k$ smaller than $l = (p-1)/d$ and which are coprime to $l$. 
+Consequently this number is by definition $\varphi(k) = \varphi(\frac { p-1} {d})$.
+Now every for every element in $\{1,...,p-1\}$ the gcd is unique and the gcd must be a divisor of $p-1$. Thus 
+if we count the number of elements in$\{1,...,p-1\}$ by counting for each divisor of $p-1$ the number of elements in $\{1,...,p-1\}$ which has this divisor as gcd then we get
+\[
+    p-1 = \sum_{d|(p-1)}{\varphi(\frac {p-1}{d})}.
+\]
+But it is obvious that writing $d$ instead of $\frac{p-1}{d}$ is the same because $\frac{p-1}{d}$ is also a divisor of $p-1$.
+Thus the sum above is exactly the same than $\sum_{d|(p-1)}{\varphi(d)}$ but written in another order.
+Hence the result:
+\[
+    p-1 = \sum_{d|(p-1)}{\varphi(d)}.
+\]
+
+
+\subsection*{(iii)}
+Let $G$ be a group: we define $\ord(g)$ for $g\in G$ as the order of $g$ in $G$.
+
+Let us first prove Lagrange's theorem which states that the order of a subgroup $H$ of $(G,*,1)$  divides the order of $G$.
+For every $g \in G$, we consider the subsets $X_g$ of $G$ defined as
+\[
+    X_g = gH = \{g*h | h \in H\}
+\]
+Since $1 \in G$ then for all $g\in G$,$g \in X_g$ (because $g*1 = g$). Therefore $\cup_{g\in G} X_g = G$.
+Furthermore subsets $X_g$ are either the same or disjoint. Indeed, let us suppose that element $g\in G$ belongs to $X_u$ and $X_v$ with $u\neq v$.
+This means that $g = u*h$ and $g = v*h'$ for some $h,h'\in H$. But then $u = g*h^{-1} = v*h'*h^{-1} = v*h^{''}$ with $h^{''} \in H$. So $u \in X_v$.
+Therefore $g\in X_u$ implies that $g = u*h, h\in H$ implies that $g = v*h^{''}*h$ implies that $g\in X_v$.
+Similarly, by symmetry, we can show that $g\in X_v$ implies that $g\in X_u$, which proves that $X_u = X_v$.
+Therefore either $X_u \cap X_v = \emptyset$ or $X_u = X_v$.
+Now since $g*h \neq g*h'$ if $h\neq h'$, we know that all $X_g$ have the same number of elements which is $|H|$.
+Since they cover $G$, if $[G:H]$ is the number of such different $X_g$, we must have
+\[
+    |G| = [G:H] \cdot |H|.
+\]
+
+From this theorem it follows that for $a\in (\zpz p)^*$, $\ord(a) \mid p-1$. Indeed, let us consider subgroup $H = <a>$ generated by $a$, $\ord(a) = |H|$.
+By apply Lagrange we know that $|H| = \ord(a)$ divides $|(\zpz p)^*| = p-1$.
+
+Now  let's conclude on Fermat's little theorem.
+Since $\ord(a) | p-1$, $\exists k: \ord(a)k=p-1$. So 
+\[
+    a^{p-1} \equiv a^{k\cdot\ord(a)} \equiv 1^k \equiv 1 \pmod p
+\]
+
+\subsection*{(iv)}
+Suppose there is an element $x$ s.t. $\ord(x) = d$ where $d \mid p-1$. We will first prove that 
+$x^i$ has also order $d$ iff $i$ is invertible mod $d$. First let us define the subgroup generated by $x$ as $H = <x>$. We know that $|H| = d$.
+
+Suppose that $\ord(x^i) = d$. Then $x^i$ also generates $H$ since $x^i \in H$ and $\ord(x^i) = |H|$. So there must be a power, let's say $j$  for which 
+$(x^i)^j = x$. Therefore $ij \equiv 1 \pmod d$.
+
+Now suppose that $i$ is invertible mod $d$. Let's call its inverse $j$. We have that $(x^i)^j = x$. Thus $(x^i)^{kj} = x^k$ for all $k$ integer. Thus $x^i$  is a generator
+of $H$ and therefore $\ord(x^i) = d$.
+
+If $x$ exists then the number of elements that have order $d$ is the number of elements which are invertible mod $d$ and this number is exactly $\varphi(d)$.
+So we need to prove that $x$ exists and that no other elements (elements not in $H$) have order $d$.
+
+First let's prove that no other elements have this order. Suppose that there is an element $y_0 \in (\zpz p)^* \setminus H$ s.t. $\ord(y_0) = d$.
+We see that $(xy_0)^d = x^dy_0^d = 1$ and $(xy_0)^k = x^ky^k \neq 1$ for $k < d$, because otherwise $y_0^{k} = x^{-k}$ which would mean that $y_0 \in H$.
+So $\ord(xy_0) = d$. Furthermore $xy_0 \notin <x> = H$ because this would imply that $y_0 \in <x>$. Similarly $xy_0 \notin <y_0>$.
+Therefore we have a new element $y_1=xy_0$ which has order $d$ and is not in $<x>$ and not in $<y_0>$. Applying the same argument we see that $y_1x$ and $y_1y_0$ have also order $d$
+and $y_1x$ is not in $<y_1>$ nor in $<x>$. $y_1y_0$ is not in $<y_1>$ and not in $<y_0>$. By iterating the process we can infinitely find new elements that have order $d$
+and we can define recursively the following infinite sequence of all distinct elements in the group that have order $d$ as follows:
+\[
+    \begin{split}
+        & y_0 \notin <x>: \ord(y_0) = d\\
+        & y_1 = xy_0\\ 
+        & y_i = y_{i-1}y_{i-2} \quad \mbox{for } i \geq 2 \\
+    \end{split}
+\]
+But this contradicts the finiteness of the group.
+
+We still need to prove that there exists an element $x$ that have order $d \mid p-1$. So suppose by contradiction that there exists a $d\mid p-1$ such that no $x$ has order $d$.
+By applying what we just proved we know that for all other $d' \mid p-1$ there are $\varphi(d')$ elements that have this order. And by exercise (iii), we know that every element has order 
+which divides $p-1$. So we must have that $\sum_{d'|(p-1) \land d'\neq d}\varphi(d') = p-1$. But by point (ii), $\sum_{d' | (p-1)} \varphi(d') = p-1$ so 
+$\sum_{d'|(p-1) \land d'\neq d}\varphi(d') < p-1$ and we have a contradiction.
+
+
+\subsection*{(v)}
+By applying (iv) with $d=p-1$ we have that $\varphi(p-1)$ elements in $(\zpz p)^*$ have order $d=p-1$. Since $\varphi(p-1) > 0$, it means that there exists at least one generator 
+of the group.
+
+Now let $g$ be a generator of the group. Consider $i$ s.t. $i$ and $p-1$ are coprime. By little Fermat we have that $(g^i)^{p-1} \equiv 1 \pmod p$.
+Suppose by contradiction that $\exists k < p - 1$ s.t. $(g^i)^k \equiv 1 \pmod p$. Then $g^{ik} \equiv 1 \pmod p$, but using that $\ord(g) = p-1$ we have that $p-1|ik$.
+But $\gcd(i,p-1) = 1$ implies that $p-1|k$. Therefore $p-1 \leq k$ which is a contradiction.
+Thus $p-1$ is the smallest positive integer s.t.  $(g^i)^p-1 \equiv 1 \pmod p$ which means that $g^i$ is also a generator.
+
+Note that $(\zpz p)^*$ has $\varphi(p-1) = \varphi(\varphi(p))$ generators.
+
+\section*{3.3}
+
+The C code is called \texttt{invmod.c}. It takes an integer smaller than $2^{64}$ and outputs its inverse modulo $2^{64}$ if it exists.
+In the case of my sciper number which is 186935, I get that the inverse is 5998164558677408647.
+
+\end{document}

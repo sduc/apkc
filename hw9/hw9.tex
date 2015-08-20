@@ -1,0 +1,259 @@
+\documentclass[12pt,a4paper]{article}
+
+
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\usepackage{fancyhdr} % Required for custom headers
+\usepackage{lastpage} % Required to determine the last page for the footer
+\usepackage{extramarks} % Required for headers and footers
+\usepackage[usenames,dvipsnames]{color} % Required for custom colors
+\usepackage{graphicx} % Required to insert images
+\usepackage{listings} % Required for insertion of code
+\usepackage{courier} % Required for the courier font
+
+% Margins
+\topmargin=-0.45in
+\evensidemargin=0in
+\oddsidemargin=0in
+\textwidth=6.5in
+\textheight=9.0in
+\headsep=0.25in
+
+\linespread{1.1} % Line spacing
+
+% Set up the header and footer
+\pagestyle{fancy}
+\lhead{\hmwkAuthorName} % Top left header
+\chead{\hmwkClass } % Top center head
+\rhead{\hmwkTitle\firstxmark} % Top right header
+\lfoot{\lastxmark} % Bottom left footer
+\cfoot{} % Bottom center footer
+\rfoot{Page\ \thepage\ of\ \protect\pageref{LastPage}} % Bottom right footer
+\renewcommand\headrulewidth{0.4pt} % Size of the header rule
+\renewcommand\footrulewidth{0.4pt} % Size of the footer rule
+
+%----------------------------------------------------------------------------------------
+%	DOCUMENT STRUCTURE COMMANDS
+%	Skip this unless you know what you're doing
+%----------------------------------------------------------------------------------------
+
+% Header and footer for when a page split occurs within a problem environment
+\newcommand{\enterProblemHeader}[1]{
+\nobreak\extramarks{#1}{#1 continued on next page\ldots}\nobreak
+\nobreak\extramarks{#1 (continued)}{#1 continued on next page\ldots}\nobreak
+}
+
+% Header and footer for when a page split occurs between problem environments
+\newcommand{\exitProblemHeader}[1]{
+\nobreak\extramarks{#1 (continued)}{#1 continued on next page\ldots}\nobreak
+\nobreak\extramarks{#1}{}\nobreak
+}
+
+\setcounter{secnumdepth}{0} % Removes default section numbers
+\newcounter{homeworkProblemCounter} % Creates a counter to keep track of the number of problems
+
+\newcommand{\homeworkProblemName}{}
+\newenvironment{homeworkProblem}[1][Problem \arabic{homeworkProblemCounter}]{ % Makes a new environment called homeworkProblem which takes 1 argument (custom name) but the default is "Problem #"
+\stepcounter{homeworkProblemCounter} % Increase counter for number of problems
+\renewcommand{\homeworkProblemName}{#1} % Assign \homeworkProblemName the name of the problem
+\section{\homeworkProblemName} % Make a section in the document with the custom problem count
+\enterProblemHeader{\homeworkProblemName} % Header and footer within the environment
+}{
+\exitProblemHeader{\homeworkProblemName} % Header and footer after the environment
+}
+
+\newcommand{\problemAnswer}[1]{ % Defines the problem answer command with the content as the only argument
+\noindent\framebox[\columnwidth][c]{\begin{minipage}{0.98\columnwidth}#1\end{minipage}} % Makes the box around the problem answer and puts the content inside
+}
+
+\newcommand{\homeworkSectionName}{}
+\newenvironment{homeworkSection}[1]{ % New environment for sections within homework problems, takes 1 argument - the name of the section
+\renewcommand{\homeworkSectionName}{#1} % Assign \homeworkSectionName to the name of the section from the environment argument
+\subsection{\homeworkSectionName} % Make a subsection with the custom name of the subsection
+\enterProblemHeader{\homeworkProblemName\ [\homeworkSectionName]} % Header and footer within the environment
+}{
+\enterProblemHeader{\homeworkProblemName} % Header and footer after the environment
+}
+
+%----------------------------------------------------------------------------------------
+%   DOCUMENT DEFINITIONS  	
+%  
+%----------------------------------------------------------------------------------------
+
+\newcommand{\hmwkTitle}{Homework 9} % Assignment title
+\newcommand{\hmwkClass}{APKC} % Course/class
+\newcommand{\hmwkClassTime}{} % Class/lecture time
+\newcommand{\hmwkClassInstructor}{} % Teacher/lecturer
+\newcommand{\hmwkAuthorName}{Sebastien Duc} % Your name
+%----------------------------------------------------------------------------------------
+%   MY INCLUDES	
+%   my package include and commands	
+%----------------------------------------------------------------------------------------
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+
+\newtheorem{thm}{Theorem}
+\newtheorem{lemma}{Lemma}
+
+\usepackage{algorithm,algorithmicx,algpseudocode}
+\usepackage{hyperref}
+
+\title{APKC - Homework 9}
+\author{Sebastien Duc}
+\date{\today}
+
+
+\newcommand {\zpz}[1]{\mathbb{Z}/#1\mathbb{Z}}
+\newcommand {\polyf}{\mathbb{Z}[x]}
+\newcommand {\sign}{\mathrm{sign}}
+\newcommand {\thus}{\Rightarrow\:}
+\newcommand {\nequiv}{\not\equiv}
+\newcommand {\fact}{\mathrm{fact}}
+\newcommand {\ord}{\mathrm{ord}}
+\newcommand {\lcm}{\mathrm{lcm}}
+
+\begin{document}
+\maketitle
+
+\subsection{9.1}
+The method consists of simply comparing $g^k$ with $h_0$ starting with $k=0$ and incrementing $k$ until $g^k = h_0$.
+At each step we only need to do one multiplication namely $g^{k+1} = g^k \cdot g$ (except for $k=0,1$) and one equality test.
+There cannot be more that $n$ steps, i.e. $k<n$.
+Therefore if we do a worst-case analysis of this algorithm, we have that the cost $C$ of this method is 
+\[
+    C \leq (n-2)\cdot M + n \cdot E \leq (M+E)\cdot n.
+\]
+This happens when $m_0 = n-1$, because we need to run over all integer in $\{0,1,\dots,n-1\}$.
+
+\subsection{9.2}
+To find $m_i, i=1,\dots,e$, we can proceed as follows. We repeat pretty much what we did in 9.1, but at each step we compare with $h_1,\dots,h_e$.
+More precisely, we start with $k=0$ and increment $k$ until we found all $m_i,i=1,\dots,e$ and at each step we compare $h_i$ with $g^k$ for all $i$ for which we have not already found $m_i$,
+$i\in\{1,\dots,e\}$.
+
+Again we do a worst-case analysis, which occurs when the $m_i$-s are found in the last $e$ steps of the algorithm.
+The number of multiplications does not change from the previous worst case, however there are a few more equality test, namely $e\cdot(n-e) + e + (e-1) + \dots + 1$ 
+(note: $e\cdot(n-e)$ is the number of tests for the first $n-e$ steps). 
+Hence the cost $C$ of this algorithm is 
+\[
+    C \leq (n-2)\cdot M + e(n-e)\cdot E + \frac{e(e+1)}{2}\cdot E \leq (M + e\cdot E) \cdot n.
+\]
+
+\subsection{9.3}
+For this algorithm we precomputed $g_{s-1} = g^{s-1}$ therefore we can compute $\theta := g^{-s} = (g_{s-1}\cdot g)^{-1}$.
+Then at each step $k$ we only need to compute $h_0g^{-(k+1)s} = h_0g^{-ks}\cdot\theta$.
+
+We need $s-2$ multiplications for the pre computation and one more to get $g^s$. Furthermore we also need one inversion to have $\theta$.
+Then at every step we need to do $s$ equality tests and one multiplication (we do not need to do a multiplication for $k=0$).
+The worst case is when $m_0 = n-1$, therefore $k=\left\lfloor \frac{n-1}{s} \right\rfloor$ which leads us to $\left\lfloor \frac{n-1}{s}\right\rfloor + 1$ steps.
+
+The memory cost is $s + 1$, where the 1 comes from $\theta$ we need to store.
+The cost $C$ of this algorithm is 
+\[
+    C \leq \left(\left\lfloor \frac{n-1}{s} \right\rfloor + 1\right)\cdot (s\cdot E + M) + (s-2)\cdot M + I \leq  (s + n)\cdot E + \left(\frac{n}{s} + s\right)\cdot M + I.
+\]
+
+
+To find the optimal $s$ which minimizes $C$, we compute the derivative with respect to $s$ and find its zeros
+\[
+    \begin{split}
+              & E -\frac{nM}{s^2} + M = 0\\
+        \thus & s = \sqrt{\frac{nM}{M+E}} \approx \sqrt{n}\\
+    \end{split}
+\]
+
+
+\subsection{9.4}
+The precomputation is exactly the same, so the cost here is unchanged. Then at each step we need to do $e\cdot s$ equality tests because we need to check
+if $h_ig^{-ks}$ is equal to $g_j$ for $j=0,\dots,s-1$ and for $i=1,\dots,e$. We also need to do $e$ Multiplications instead of one at each step (except step $k=0$ where we do not need any).
+In the worst case scenario we still have $\left\lfloor \frac{n-1}{s} \right\rfloor + 1$ steps. Therefore the cost $C$ is at most
+\[
+    \begin{split}
+        C &\leq \left( \left\lfloor \frac{n-1}{s} \right\rfloor \right) \cdot (se \cdot E + e\cdot M) + se\cdot E + (s-1) \cdot M + I\\
+          &\leq e(n+s)E + \left(\frac{n}{s}e + s\right)M + I
+    \end{split}
+\]
+The memory cost is the same than the one we have in 9.3, namely $s+1$.
+Let us find the optimal $s$ which minimizes $C$. We compute the derivative with respect to $s$ and find its zeros
+\[
+    \begin{split}
+        & eE + M - \frac{neM}{s^2}\\
+  \thus & s = \sqrt{\frac{eM}{eE + M}n} \approx \sqrt{n}
+    \end{split}
+\]
+
+
+\subsection{9.5}
+First let us prove a useful lemma
+\begin{lemma}
+    Le $p$ and $q$ be coprime integers. And let $C_p$ resp. $C_q$ be a cyclic group of order $p$ resp. $q$.
+    Then
+    \[
+        C_{pq} \cong C_p \times C_q
+    \]
+    where $C_{pq}$ is a cyclic group of order $p\cdot q$.
+\end{lemma}
+\begin{proof}
+    Let $g_1$ resp $g_2$ be a generator of $C_p$ resp. $C_q$. We know that $C_p \times C_q$ is a group of order $p\cdot q$.
+    Consider $g = (g_1,g_2) \in C_p\times C_q$. Then $g^k = (g_1^k,g_2^k)$ and $g^k = 1$ if and only if $g_1^k = 1$ and $g_2^k = 1$.
+    Therefore $\ord(g) \mid p \:\land\: \ord(g) \mid q$, but since $(p,q)=1$ we conclude that $g^k = (1,1)$ if and only if $pq \mid k$.
+    Thus $\ord(g)  = pq$. Hence $C_p\times C_q$ has order $pq$.
+    Finally we know that all cyclic group of a given order are isomorphic, the isomorphism being simply defined by
+    \[
+        \begin{split}
+            C_{pq} &\rightarrow C_p \times C_q\\
+            g &\rightarrow (g_1,g_2)\\
+        \end{split}
+    \]
+    where $C_{pq} = <g>$, $C_p \times C_q = <(g_1,g_2)>$
+\end{proof}
+A consequence of this Lemma is the following
+\[
+    C_n = C_{p_1^{k_1}} \times \dots \times C_{p_h^{k_h}} 
+\]
+where $n=p_1^{k_1}\cdot\dots\cdot p_h^{k_h}$ is the prime factorization of $n$. We simply apply Lemma 1. repeatedly.
+
+If $n = \prod_{i=1}^{k} p_i$, for distinct primes $p_i$ then
+we know by Lemma 1. that there exists an isomorphism $\Phi:G\rightarrow G_{p_1} \times\dots\times G_{p_k}$.
+$g$ is a generator and by the isomorphism $\Phi(g) = (g_1,\dots,g_k)$ is also a generator.
+We also know that all cyclic groups of the same order are isomorphic. Therefore for all $i=1,\dots,k$ $G_{p_i}$ is isomorphic
+to the subgroup of order $p_i$ of $G$ which can be generated by $g^{n/p_i}$. So we can set $g_i = g^{n/p_i}$ for $i=1,\dots,k$.
+Furthermore 
+\[
+    \Phi(g^m) = (g_1^m,\dots,g_k^m) = (g_1^{m \bmod p_1},\dots,g_k^{ m \bmod p_k}).
+\]
+Therefore if we find the $k$ discrete logarithm $m_i$ of
+$h_i = g_i^{m_i}$, where $m_i = m \bmod p_i$ and $g_i = g^{n/p_i}$, then we can recover $m$ by using the Chinese Remainder Theorem.
+Indeed we have, we found the $m_i$ and $m \equiv m_i \pmod {p_i}$. By the CRT we have 
+\[
+    m \equiv \sum_{i=1}^km_i \frac{n}{p_i}\left[\left(\frac{n}{p_i}\right)\right]_{p_i}^{-1} \pmod n
+\]
+where $\left[\left(\frac{n}{p_i}\right)\right]_{p_i}^{-1}$ is the inverse of $ (\frac{n}{p_i})$ of modulo $p_i$ and finally we pick the $m$ such that $0\leq m \leq n-1$.
+
+\subsection{9.6}
+If $n = \prod_{i=1}^{k}p_i$  we have to find $k$ discrete logarithm. 
+More precisely, we need to find the following discrete logarithm
+\[
+    m_i = \log_{g_i}(h_i)
+\]
+To compute them, we need to compute 
+\[
+    g_i = g^{n/p_i} = g^{-p_i} \quad \mbox{and} \quad h_i = h^{n/p_i} = h^{-p_i}. 
+\]
+This will need one inversion and $\sum_i 2\log(p_i) = 2\log(n)$ multiplication. We just compute $g^{-1}$ and then using square and multiply we
+obtain $g_i,h_i$ with $\log(p_i)$ multiplications.
+We can see that the complexity will be determined by the largest primes factors of $n$.
+By exercise 9.3, we have for factor $p_i$ a cost $C_{p_i} = (\sqrt{p_i} + p_i)E + 2\sqrt{p_i}M + I$ where we plugged $s = \sqrt{p_i}$. 
+So we have roughly $p_i$ equality tests, $\sqrt{p_i}$ multiplications and one inversion.
+Finally to find $m$ by the CRT, we need $k$ inversions and $2k$ multiplications. 
+Therefore the cost is 
+\[
+    C \leq \sum_i{(\sqrt{p_i}M + p_i E)} + 2k(I+M) + I + 2\log(n)M
+\]
+So $C$ is in $O(\sqrt{p_{MAX}}M + p_{MAX}E + I)$ with $p_{MAX} = \max_ip_i$, since $\log(n) = \sum_i\log(p_i) \leq k\log(p_{MAX})\in O(\sqrt{p_{MAX}})$.
+
+\end{document}

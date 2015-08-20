@@ -1,0 +1,24 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\title{APKC - Homework 4}
+\date{\today}
+
+\newcommand {\zpz}[1]{\mathbb{Z}/#1\mathbb{Z}}
+\newcommand {\ind}[1]{1_{\{#1\}}}
+
+\begin{document}
+\maketitle
+\subsection*{4.2.1}
+If we define $z_k = x + kp$, then consider the following value for $k$
+\[
+    k_* = (y-x) \cdot (p^{-1} \bmod q) + u \cdot q 
+\]
+where 
+\[
+    u = \min\{ l\in\mathbb{N} \mid (y-x) \cdot (p^{-1} \bmod q) + l \cdot q > 0 \}
+\]
+We note that $-(p-1) \leq y-x \leq q-1$ and therefore  $-(p-1)\cdot(q-1) \leq (y-x) \cdot (p^{-1} \bmod q) \leq (q-1)^2$.
+This implies that $0 \leq k_* \leq (q-1)^2$.
+
+\end{document}

@@ -1,0 +1,91 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\usepackage{algorithm,algorithmicx,algpseudocode}
+
+\title{APKC - Homework 7}
+\author{Sebastien Duc}
+\date{\today}
+
+\newcommand {\zpz}[1]{\mathbb{Z}/#1\mathbb{Z}}
+\newcommand {\polyf}{\mathbb{Z}[x]}
+\newcommand {\sign}{\mathrm{sign}}
+\newcommand {\thus}{\Rightarrow\:}
+\newcommand {\nequiv}{\not\equiv}
+\newcommand {\fact}{\mathrm{fact}}
+\newcommand {\ord}{\mathrm{ord}}
+\newcommand {\lcm}{\mathrm{lcm}}
+
+
+\begin{document}
+\maketitle
+
+\section*{7.1}
+Let us first see how to compute $y_2$. We have 
+\[
+    \begin{split}
+             & xy \equiv 1 \pmod z\\
+       \thus & xy = 1 + kz \quad \mbox{for some $k\in\mathbb{Z}$}\\
+       \thus & x^2 y^2 = 1 + 2kz k^2 z^2 \\
+       \thus & x^2 y^2 = 1 + 2(xy - 1) + k^2 z^2 \\
+       \thus & x(2y - xy^2) = 1 - k^2 z^2\\
+       \thus & x(2y - xy^2) \equiv 1 \pmod{z^2}\\ 
+    \end{split}
+\]
+Thus we get that $y_2 = 2y -xy^2$.
+Therefore let's try to compute the $y_l$ recursively.
+Suppose we have $y_l$ such that $xy_l \equiv 1 \pmod z^l$. Then,
+\[
+    \begin{split}
+            & xy_l = 1 + k_l z^l\\
+      \thus & xy_l (xy) = (1 + k_l z^l)(1 + kz)\\
+      \thus & x^2 y_l y = 1 + (xy_l - 1) + (xy - 1) + k k_l z^l\\
+      \thus & x(y + y_l -xyy_l) \equiv 1 \pmod{z^{l+1}}\\
+    \end{split}
+\]
+Thus given $y_l$ we can compute $y_{l+1} = (y + y_l - xyy_l)$.
+
+\section*{7.2}
+First recall that when $n$ is prime $\varphi(n) = n-1$ and this is true only when $n$ is prime. Consider now $G = (\zpz{n})^*$,
+using what we just said, $|G| = \varphi(n) = n - 1$ if and only if $n$ is prime. 
+%But this is equivalent to say that a generator of $G$ has order $n-1$.
+%Or in different words, there exists $b$ s.t. gcd$(b,n) = 1$ and $n-1$ is the smallest integer s.t. $b^{n-1} \equiv 1 \pmod n$.
+%To make sure that the order of $b$ is $n-1$ we have to check that for all divisors $d$ of $n-1$, $b^d \nequiv 1 \pmod n$.
+%We want to prove that $b^{(n-1)/q} \nequiv 1 \pmod n$ for every prime divisor of $n-1$ is sufficient to show that $b$ has order $n-1$.
+%If $b$ has order $n-1$ then it's obvious that this works.
+%For the converse we suppose by contradiction that it's wrong i.e. suppose that $b$ has order $d$  for $d < n-1$ and that $b^{(n-1)/q} \nequiv 1 \pmod n$. 
+%We know that $d$ must divide $n-1$ because $b^{n-1} \equiv 1 \pmod n$. Suppose $n - 1  = p_1^{a_1} \cdot \dots \cdot p_k^{a_k}$, then 
+%$d = p_{i_1}^{\alpha_{i_1}} \cdot \dots \cdot p_{i_l}^{\alpha_{i_l}}$ with $i_1,\dots,i_l \in \{1,\dots,k\}$ and $\alpha_{i_j} \leq a_{i_j}$ for $j = 1,\dots,l$. 
+%So $(n-1)/q$ is a multiple of $d$ and therefore $b^{(n-1)/q}\equiv 1 \pmod n$ which is a contradiction. Hence the result.
+If for every $q$, prime divisor of $n-1$ we can find a $b$ s.t.  $\gcd(n,b)=1$(i.e. $b\in (\zpz{n})^*$), $b^{n-1} \equiv 1 \pmod n$ and  $b^{(n-1)/q}\nequiv 1 \pmod n$ then
+we know that the order of $b$ in $(\zpz{n})^*$ divides $n-1$ (because $b^{n-1} \equiv 1 \pmod n$). Furthermore, since $b^{(n-1)/q}\nequiv 1\pmod 1$ we know that the order of $b$
+cannot be a multiple of $(n-1)/q$. Thus supposing that in the factorization of $n-1$ $q$ is appearing with power $e_q$ (i.e. $n-1 = q^{e_q} \cdot \kappa$ s.t. $q \nmid \kappa$), 
+it must be the case that the order of $b$ is a multiple of $q^{e_q}$ i.e. $\ord(b) = \alpha_q q^{e_q}, 1 \leq \alpha_q \leq (n-1)/q^{e_q} $.
+But by Lagrange's theorem we know that the order of every element must divide the order of the group.  Consequently the order of $G$ is a multiple of the least common multiple of the order 
+of all these $b$ we found for each $q$
+\[
+    |G| = c \cdot \lcm\{\alpha_q q^{e_q} \mid \forall q \mbox{ prime divisor of } n-1 \land 0\leq a_q \leq (n-1)/q^{e_q} \} = c \cdot (n-1)
+\]
+where $c\in\mathbb{N}\setminus\{0\}$.
+But we know that the order of $G$ is at most $n-1$, therefore it is equal to $n-1$. Hence the result.
+
+\section*{7.3}
+For this exercise we use the following trick to fator $n$. If $x \equiv y \pmod p$ then $x-y$ is a multiple of $p$. Furthermore in our algorithm we pick
+$0 \leq x,y < n$ so $|x - y| < n$ therefore $k < n$. Thus gcd$(x-y,n) = p$ in this case. Similarly when $x \equiv y \pmod q$ , gcd$(x-y,n) = q$.
+In the other cases gcd$(x-y,n) = 1$.
+So the algorithm is simple, at each step we pick a new random number between 0 and $n-1$ and we compute the gcd of this number $k$ for all $k$ we already picked before.
+Note if we got a duplicate then skip to next step.
+We do this until the gcd is greater than 1, which means we have found either $p$ or $q$. 
+
+Since there are $q$ equivalence classes mod $q$, then by the birthday paradox we get twice the same equivalence class after roughly $\sqrt p$ times.
+
+The complexity of the algorithm in w.r.t black box calls is the following. We need roughly $\sqrt p$ calls to black box I to find duplicates. 
+At each step we have to compute a gcd for every old values.
+So we need roughly $\sum_{i = 1}^{\sqrt p - 1}i = (p - \sqrt p)/2$ calls of black box II i.e. which is in $O(p)$. Thus the total is in $O(p)$ calls to both black boxes.
+We need roughly $\sqrt p$ memory because we need to keep every already picked number.
+
+Our algorithm doesn't always find $p$ but since it is smaller it has a higher probability to find it. But there could be some cases where we found $q$ first.
+
+\end{document}

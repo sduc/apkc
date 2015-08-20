@@ -1,0 +1,132 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\usepackage{algorithm,algorithmicx,algpseudocode}
+
+\title{APKC - Homework 5}
+\author{Sebastien Duc}
+\date{\today}
+
+\newcommand {\zpz}[1]{\mathbb{Z}/#1\mathbb{Z}}
+\newcommand {\mprod}{\tilde{\cdot}}
+\newcommand {\nmprod}{\hat{\cdot}}
+\newcommand {\nmsum}{\hat{+}}
+
+\renewcommand{\algorithmicrequire}{\textbf{Input:}}
+\renewcommand{\algorithmicensure}{\textbf{Output:}}
+
+\begin{document}
+    \maketitle
+
+    \section*{5.1}
+    The idea in this exercise is simple. $n=2^{2kl} + t$ with $0 < t < 2^{kl}$ is an integer with where its representation in binary
+    is a 1 followed by $kl$ 0 followed by $t$ represented in binary using $kl$ bits.
+    \[
+        n = 1 \underbrace{0 \dots 0}_{kl} \underbrace{t}_{kl}
+    \]
+    Now consider the product of $a$ and $b$ modulo $n$. The result can be represented as follows: $a \cdot b = ab_L \cdot 2^{2kl} + ab_R$ i.e. $ab_L$ is the integer represented 
+    by the $2kl$ leftmost bits of the binary representation of $a \cdot b$ and $ab_R$ the $2kl$ rightmost bits.
+    Now the trick is to compute $ab_L \cdot n = ab_L \cdot 2^{2kl} + t \cdot ab_L$, therefore $F = a \cdot b - ab_L \cdot n = ab_R - t \cdot ab_L$. 
+    Note that if $F$ is positive, we are done ($F = a\cdot b \bmod n$) because $F  \leq ab_R < n$.
+    If not then the result is negative and $t \cdot ab_L \leq (2^{kl} - 1)^2 \leq 2^{3kl} - 2^{2kl} - 2^{kl} + 1 < 2^{3kl}$.
+    Therefore $F = -(F_L \cdot 2^{2kl} + F_R)$ where $F_L$ can be represented with at most $kl$ bits.
+    Again we compute $n \cdot F_L = 2^{2kl} \cdot F_L + t \cdot F_L$. And we update $F$ to $F + F_L \cdot n = t\cdot F_L - F_R$.
+    Note that $t \cdot F_L < 2^{2kl}$. So again if $F$ is positive we are done. If not, we just need to add $n$.
+
+    Let's analyse the complexity of the algorithm. First for the schoolbook multiplication we need at most $(2k)^2$ calls to the underlying $l$-bit multiplier and at most
+    $2k$ calls to the $l$-bit adder. Then $ab_L \cdot n$ takes at most $(2k)^2$ $l$-bit multiplications and $2k$ $l$-additions. 
+    Then the subtraction uses at most $2k$ $l$-bit subtraction. Then again we need at most $2k \cdot k$ calls to the $l$-bit multiplier and at most $3k$ calls to the $l$-bit subtracter.
+    Then in the worst case scenario we need to add $n$ which requires $2k$ calls to the $l$-bit adder.
+    In total we have at most $10k^2 + 11k$. Thus it is in $O(k^2)$.
+
+    \section*{5.2}
+    To achieve this goal we will only check at the end and subtract at the end if needed. So we must make sure that the overhead of either $0,n,2n$ do not is removed at 
+    the next iteration while doing the Montgomery reduction and we 
+    must find a specific $R$ such that this property is fulfilled. We will do this by induction and find the condition on $R$ while doing it. 
+    We will suppose that at step $i$ the overhead is at most $2n$ and will prove that for some $R$ satisfying some constraint, the overhead at step $i+1$ is still at most $2n$.
+    Suppose that at step
+    $i$ the overhead is of $k = 0$, $n$ or $2n$ i.e. $\tilde{r}_i' = \tilde{f}_i \nmsum \tilde{r}_{i-1} \nmprod \tilde{x} = \tilde{r}_i + kn$, 
+    where $\tilde{r}_i = \tilde{f}_i \tilde{+} \tilde{r}_{i-1}\tilde{\cdot}\tilde{x} $,
+    $\nmsum$ and $\nmprod$ are the Montgomery operations without checking and subtracting $n$ if needed.
+    Then $\tilde{r}_{i+1}' = \tilde{f}_{i+1} \nmsum \tilde{x} \nmprod (\tilde{r}_i + kn)$. 
+    But $\tilde{x} \nmprod (\tilde{r}_i + kn) = \tilde{x}(\tilde{r}_i +kn)R^{-1} = (\tilde{x}\tilde{r}_i + \tilde{x}kn)R^{-1}$.
+    But to do this reduction, we add a multiple of $n$ so that our number is divisible by $R$. Therefore we must choose an $R$ which ensure that the multiple we add is at least $k\tilde{x}$.
+    But $k\tilde{x} \leq 2(n-1)$. Now if $k = 0$ we have nothing to worry about since there is no overhead. We know that $\tilde{x}\tilde{r}_i$ is smaller than $(n-1)^2$.
+    But we want $(\tilde{x}\tilde{r}_i + \tilde{x}kn) <  (n-1 + 2n - 2)n = 3(n - 1)n$ not be be divisible by $R$ so that we must add at least $\tilde{x}k$ times $n$ to be divisible by $R$.
+    Therefore our condition on $R$ is $R > 3(n -1)n$ , which assures the indivisibility. 
+    The we get $\tilde{r}_{i+1}' = \tilde{f}_{i+1} \nmsum \tilde{x} \nmprod \tilde{r}_{i}
+    = \tilde{r}_{i+1} + kn$, $k=0,1,2$.
+    And thus we only need to check at the final step, hence the 2 comparison and at most 2 subtractions.
+
+    \section*{5.3}
+    \subsection*{5.3.1}
+    First we have to select a Montgomery radix $R$ and we represent all integer by their Montgomery representation.
+    Then we replace all usual operations by their Montgomery equivalent.
+    For \texttt{right to left} $\tilde{a} = gR$ initially and $\tilde{r} = R$. At each iteration, instead of doing the usual product, we do the Montgomery product
+    i.e. we replace $\tilde{r}$ by $\tilde{r} \mprod \tilde{a}$ and $\tilde{a}$ by $\tilde{a} \mprod \tilde{a}$.
+    Similarly, for \texttt{left to right} we have initially $\tilde{r} = gR$  and  then we do $\tilde{r} = \tilde{r} \mprod \tilde{r}$ 
+    instead of $r = r^2$ and $\tilde{r} =  \tilde{r} \mprod \tilde{g}$ instead of $r = rg$.
+    At the very end, we have to do the Montgomery reduction $r = \tilde{r}R^{-1}$ in both algorithms.
+    \subsection*{5.3.2}
+    If $g=2$ it's obvious that $g^2$ is a simple shift operation. Same for all other multiplicative operations.
+    But in the Montgomery representation, it might be the case that $\tilde{g}$ is not a power of to and therefore we cannot do shifts.
+    Hence it would be nice to have $\tilde{g} = 2^k$ for some $k$. So we should choose $R$ s.t. $gR$ is a power of two.
+    \subsection*{5.3.3}
+    Consider the pseudo-code in Algorithm~\ref{winexp}. It performs a exponentiation of $g^e$ in $\zpz{n}$ using a window of size $w$.
+    Picking chunks of $w$ bits is equivalent to represent $e$ in base $2^w$.
+    First, in our pseudo-code the bits are processed from left to right. Furthermore, we need to pre-process all odd powers of the base i.e.
+    $g^3,...,g^{2^w-1}$. Therefore for each of these values, we need $\lceil\log(n)\rceil$ bits in the memory. 
+    Thus, we need at most $2^{w-1}\cdot\lceil\log(n)\rceil$ bits for the precomputed values.
+    \begin{algorithm}{}
+        \caption{Window Exponentiation}\label{winexp}
+        \begin{tabular}{l l}
+            \textbf{Input:} & $g \in \zpz{n}$, $e = \sum_{i=0}^{L} e_i 2^{wi}\in\mathbb{N}$, $w \in \mathbb{N}$\\
+            \textbf{Precompute:} & $g^3,g^5,...,g^{2^w-1}$\\
+            \textbf{Output:} &  $g^e \bmod n$
+        \end{tabular}
+        \begin{algorithmic}[1]
+        \Function{WindowExponentiation}{$g$, $e$, $n$}
+            \State $r \gets 1$
+            \State $i \gets L$
+            \While{$i \geq 0$}
+                \State $(s,u)$ s.t. $e_i = u2^s$ where $u$ is odd or $s=w,u=0$ if $e_i = 0$
+                \For{$j = 1 \to  w-s$}
+                    \State $r \gets r^2$
+                \EndFor
+                \State $r \gets rg^u$\Comment{use the precomputed $g^u$}
+                \For{$j = 1 \to s$}
+                    \State $r \gets r^2$
+                \EndFor
+                \State $i \gets i-1$
+            \EndWhile
+            \State \Return $r$
+        \EndFunction
+        \end{algorithmic}
+    \end{algorithm}
+    Let us analyse the average behavior of the algorithm. First let's define $\omega_w(e)$ be the weight of $e$ in base $2^w$, i.e. the number of $e_i$ which are nonzero in 
+    when $e = e_L...e_0$ is the representation in base $2^w$. Note that $\omega_w(e)$ is non increasing in function of $w$ i.e. $\omega_w \geq \omega_{w+1}$ for all $w$.
+    We see that we need $2^{w-1}$ multiplications for the pre-computations. The number of squaring is independent of the choice of $w$ (always in $O(\log(e))$).
+    The number of multiplications during the process is $\omega_{w}(e)$. Therefore the total number of multiplications for $w$ is $M(w) = 2^{w-1} + \omega_w(e)$
+    So for a given $e$ if we want to get the optimal window size $w_{OPT}$, we should pick the smallest $w$ such that $M(w+1) - M(w) \geq 0$ (because $\omega_w(e)$ is non increasing). 
+    Thus,
+    \[
+        w_{OPT} = \min\{w \mid \omega_{w}(e) - \omega_{w+1}(e)  \leq 2^{w-1}\}
+    \]
+    
+    In \cite[p.~10-11]{cohen}, a more explicit formulae for $w_{OPT}$ is given. To find it we can give an expression for $\omega_w{e}$ on average.
+    On average, $\omega_w(e)$ is $(1 - \frac 1 {2^w})(\lfloor \frac{\log e}{w}\rfloor + 1)$.
+    Therefore, $M(w)$ is approximatively $2^{w-1} + (\frac{2^w - 1}{w2^w})\log e$. This leads to the following
+    \[
+        w_{OPT} = \min\left\{w \mid \log e \leq \frac{w(w+1)2^{2w}}{2^{w+1} -w -2}\right\}.
+    \]
+
+    \begin{thebibliography}{9}
+        \bibitem{cohen}
+        H. Cohen,
+        \emph{ A course in Computational Algebraic Number Theory},
+        Graduate Texts in Mathematics, vol. 138, Springer-Verlag, Berlin, 2000, fourth edition.
+    \end{thebibliography}
+
+\end{document}

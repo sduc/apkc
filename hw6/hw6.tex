@@ -1,0 +1,143 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\usepackage{algorithm,algorithmicx,algpseudocode}
+
+\title{APKC - Homework 6}
+\author{Sebastien Duc}
+\date{\today}
+
+\newcommand {\zpz}[1]{\mathbb{Z}/#1\mathbb{Z}}
+\newcommand {\polyf}{\mathbb{Z}[x]}
+\newcommand {\sign}{\mathrm{sign}}
+
+
+\begin{document}
+\maketitle
+
+\section*{6.1}
+\subsection*{6.1.i}
+You can find the C code in file \texttt{er\_sieve.c}. A Makefile is provided to compile it. To run it just type \texttt{./er\_sieve 186935}, where 186935 is my sciper number.
+The SAGE code is given in file \texttt{ex6\_1\_i.sage}. You can run it by typing \texttt{sage ex6\_1\_i.sage 186935}.
+The C code uses the Sieve of Eratosthenes. The generated primes are saved into a external file.
+For the part with SAGE, sieving is not useful because $L_2$ is too large. We would need to find all prime up to the root of $L_2$, which is too much.
+
+\subsection*{6.1.ii}
+The bounds are not tight. For example if we compute an upper bound and a lower bound for the first case then
+the number of primes is upper bounded by 
+\[
+    1.105\frac{L_1}{\log L_1} - 0.922\frac{L_1 - 16s}{\log(L_1-16s)} \approx 54895049836
+\]
+and it is lower bounded by 
+\[
+    0.922\frac{L_1}{\log L_1} - 1.105\frac{L_1 - 16s}{\log(L_1 - 16s)} \approx -54894853359.
+\] 
+The actual number of primes in
+this interval is $ 100264$.
+
+For the second case, the number of primes is upper bounded by 
+\[
+    1.105\frac{L_2+2^{20}}{\log(L_2 + 2^{20})} - 0.922\frac{L_2}{\log L_2} \approx 8.51858495447650\times10^{309}
+\]
+and lower bounded by \[
+    0.922\frac{L_2+2^{20}}{\log(L_2 + 2^{20})} - 1.105\frac{L_2}{\log L_2} \approx -8.51858495447650\times10^{309}.
+\]
+
+\section*{6.2}
+Simulations can be run using \texttt{ex6\_2.sage}. This script takes integer $K$ as input and runs a simulation selling 10000 $K$-bit numbers.
+Depending on $K$ we have different conclusion.
+When $K < 9$, we always make profit because there are too few number co-prime with 2 and non prime in this range.
+When $ 9 \leq K < 32$, the probability to get a co-prime number with 2 and not prime is to high, therefore we don't make any profit.
+When $K \geq 32$, the probability becomes low and we make profit with very high probability. But to get a good profit we have to sell a lot of number and therefore
+might encounter a bad number which will reduce the profit. So this model is not very good in all cases.
+
+\section*{6.3}
+\subsection*{6.3.i}
+Let's show that $\Delta p_n = n p_{n-1}$
+\[
+\begin{split}
+    \Delta p_n &= p_n(x+1) - p_n(x) = \prod_{i = 1}^{n}(x + 1 - i) - \prod_{i = 1}^{n}(x - i)\\
+               &= \prod_{i = 0}^{n-1}(x-i) - \prod_{i = 1}^{n}(x - i) = xp_{n-1} - (x-n)p_{n-1} = np_{n-1}
+\end{split}
+\]
+
+\subsection*{6.3.ii}
+Let $f = \sum_{i=0}^{n-1}c_i x^i \in \polyf$.
+We can write as $f = \sum_{i = 0}^{n - 1}b_i p_i$ because the $p_i$ form a basis for polynomials of degree $\leq n - 1$ in $\mathbb{Q}[x]$ and $f\in \mathbb{Z}[x] \subset \mathbb{Q}[x]$.
+
+Let's prove that $b_i$ are integers. We will do this by induction.
+\begin{description}
+    \item[Base case:] $b_{n-1}p_{n-1} = b_{n-1}(x^{n-1} - q)$  where $q \in \polyf$ and deg$(q) = n-2$.
+        Since $b_{n-1}$ is the only coefficient in front of $x^{n-1}$, it must be the case that $b_{n-1} = c_{n-1} \in \mathbb{Z}$.
+    \item[Inductive case:] Suppose that $b_k$ are integers for all $i < k \leq n-1$. We want to prove that $b_i$ is also an integer.
+        Indeed
+        \[
+            \begin{split}
+                b_k p_k &= b_k \prod_{j = 1}^{k} (x - j) = b_k(x^k + q_k) \quad \mbox{, where }q_k\in \polyf \land \mathrm{deg}(q_k) = k-1
+            \end{split}
+        \]
+        Thus $c_i = b_i + \sum_{j = i+1}^{r-1}r_j b_j$ where $c_i,r_j \in \mathbb{Z}$.
+        The $r_j$'s come from the $p_j$ which has obviously integer coefficients.
+        Furthermore by the induction hypothesis, $b_j \in \mathbb{Z}$.
+        Therefore $b_i = c_i - \sum r_jb_j \in \mathbb{Z}$.
+\end{description}
+
+Let's show now that $\Delta^j f = \sum_{i = j}^{n - 1}b_j \frac{i!}{(i-j)!}p_{i-j}$.
+Again we will do this by induction on $j$.
+\begin{description}
+    \item[Base case:] $\Delta f = \sum_{i = 0}^{n-1} b_i \Delta p_i = \sum_{i=0}^{n-1}i b_i p_{i-1} = \sum_{i=1}^{n-1}i b_i p_{i-1}$
+        And the formula for $j=1$ is $\Delta f = \sum_{i = 1}^{n-1}b_i \frac{i!}{(i-1)!}p_{i-1} = \sum_{i=1}^{n-1}b_i i p_{i-1}$.
+    \item[Inductive case:] Suppose it is true for $> 1$. We want to prove that it is true for $j+1$. Indeed
+        \[
+            \begin{split}
+                \Delta^{j+1} f &= \Delta^j f(x+1) - \Delta^j f(x) \\
+                               &= \sum_{i = j}^{n-1} b_i \frac{i!}{(i-j)!}\Delta p_{i-j}\\
+                               &= \sum_{i = j}^{n-1}  b_i \frac{i!}{(i-j)!}(i-j)p_{i-j-1}\\
+                               &= \sum_{i = j+1}^{n-1} b_i \frac{i!}{(i-j)!}p_{i-j}
+            \end{split}
+        \]
+\end{description}
+
+Finally we derive $(\Delta^j j)(1)$. First note that $p_{i-j}(1) = \delta_{i-j}$. Because when $i=j$, $p_0 = 1$ and when
+$i \neq j$, $p_{i-j} = (1 - 1) \prod_{k = 2}^{i-j}(1 - k) = 0$.
+Therefore, $(\Delta^j f)(1) = \sum_{i=j}^{n-1} b_i \frac{i!}{(i-j)!}\delta_{i-j} = j!b_j$.
+
+To compute these number, we first compute $\Delta f(1)$. Then we compute $\Delta^2 f(1)$ by computing $\Delta f(2)$ and subtracting to it the already computed
+$\Delta f(1)$. We apply this iteratively until we reach $\Delta^n f(1)$.
+The number of additions needed to compute all these values is equal to $\frac{n(n+1)}{2}$.
+Because to compute $\Delta^jf$ we need $j$ addition. We can prove this by induction on $j$.
+Trivially for for $j=1$ we need one subtraction. Now suppose this is true for $j$, then $\Delta^{j+1}f(x) = \Delta^jf(x+1) - \Delta^jf(x)$.
+By induction hypothesis we need $j$ operations to compute $\Delta^j f(1)$ and therefore we need $j$ operations to compute $\Delta^jf(2)$.
+Hence the $j+1$ operations (one more for the subtraction and we don't need to recompute $\Delta^j f(1)$). So the total complexity is $\sum_{j=1}^n j = \frac{n(n+1)}{2}$.
+
+\subsection*{6.3.iii}
+We are given the coefficients $b_i$ and we want to find coefficients $c_i$ of polynomial $f$.
+Algorithm~\ref{retrcoef} shows how to recover the $c_i$'s from the $p_i$'s.
+\begin{algorithm}
+    \caption{Retrieve Coefficients}\label{retrcoef}
+    \begin{tabular}{l l}
+        \textbf{Input:} & $b_i$ for $i=0,\dots,n-1$\\
+        \textbf{Output:} & $c_i$ for $i=0,\dots,n-1$\\
+    \end{tabular}
+    \begin{algorithmic}[1]
+        \Function{RetrieveCoef}{$b_0,\dots,b_{n-1}$}
+            \State $c_{n-1} \gets b_{n-1}$
+            \For{$i=n-2 \to 0$} 
+                \State $c_i \gets b_i - (i+1) \cdot c_{i+1}$
+                \For{$j=i+1 \to n-2$}\Comment{do not enter the loop when $i=n-2$}
+                    \State $c_j \gets c_j - i\cdot c_{j+1}$
+                \EndFor
+            \EndFor
+            \State \Return $(c_1,\dots,c_{n-1})$
+        \EndFunction
+    \end{algorithmic}
+\end{algorithm}
+
+Therefore we need $\sum_{i=0}^{n-1}i = n(n-1)/2$ additions and  $n(n-1)/2$ multiplications.
+
+Note that it was asked to do only multiplications with non-negative integers therefore we can do the following:
+$c_i \leftarrow b_i - \sign(c_{i+1})(i+1)|c_{i+1}|$ and $c_j \leftarrow c_i - \sign(c_{j+1})i |c_{j+1}|$.
+
+\end{document}

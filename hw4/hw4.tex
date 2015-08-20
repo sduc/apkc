@@ -1,0 +1,38 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\title{APKC - Homework 4}
+\author{Bruno Studer \and Sebastien Duc  \and Yann Schoenenberger}
+\date{\today}
+
+\newcommand {\zpz}[1]{\mathbb{Z}/#1\mathbb{Z}}
+\newcommand {\ind}[1]{1_{\{#1\}}}
+
+\begin{document}
+\maketitle
+
+\subsection*{4.1.4}
+For the first algorithm (the symmetric one), we claim that it runs in $O(L^3)$.
+First note that $d_0, d_1$ have at most $L$ bits. Then it is easy to see from the algorithm that $|d_i|$ can be represented with at most $L-i+1$ bits.
+This leads to at most $L$ iterations, because we stop when $d_i = 0$.
+Then we can see that each iterations is in $O(L^2)$, because of the integer division (this is the most expensive operation, the rest can be neglected).
+Hence our complexity.
+
+We claim that the second algorithm (the binary one) is in $O(L^2)$.
+The number of iterations is again at most the same, i.e. $L$.
+But since we replace the division by a shift, every iteration is in $O(L)$. Hence the result.
+
+
+\subsection*{4.2.1}
+If we define $z_k = x + kp$, then consider the following value for $k$
+\[
+    k_* = (y-x) \cdot (p^{-1} \bmod q) + u \cdot q 
+\]
+where 
+\[
+    u = \min\{ l\in\mathbb{N} \mid (y-x) \cdot (p^{-1} \bmod q) + l \cdot q > 0 \}
+\]
+We note that $-(p-1) \leq y-x \leq q-1$ and therefore  $-(p-1)\cdot(q-1) \leq (y-x) \cdot (p^{-1} \bmod q) \leq (q-1)^2$.
+This implies that $0 \leq k_* \leq (q-1)^2$.
+
+\end{document}

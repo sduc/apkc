@@ -1,0 +1,274 @@
+\documentclass[12pt,a4paper]{article}
+
+
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\usepackage{fancyhdr} % Required for custom headers
+\usepackage{lastpage} % Required to determine the last page for the footer
+\usepackage{extramarks} % Required for headers and footers
+\usepackage[usenames,dvipsnames]{color} % Required for custom colors
+\usepackage{graphicx} % Required to insert images
+\usepackage{listings} % Required for insertion of code
+\usepackage{courier} % Required for the courier font
+
+% Margins
+\topmargin=-0.45in
+\evensidemargin=0in
+\oddsidemargin=0in
+\textwidth=6.5in
+\textheight=9.0in
+\headsep=0.25in
+
+\linespread{1.1} % Line spacing
+
+% Set up the header and footer
+\pagestyle{fancy}
+\lhead{\hmwkAuthorName} % Top left header
+\chead{\hmwkClass } % Top center head
+\rhead{\hmwkTitle\firstxmark} % Top right header
+\lfoot{\lastxmark} % Bottom left footer
+\cfoot{} % Bottom center footer
+\rfoot{Page\ \thepage\ of\ \protect\pageref{LastPage}} % Bottom right footer
+\renewcommand\headrulewidth{0.4pt} % Size of the header rule
+\renewcommand\footrulewidth{0.4pt} % Size of the footer rule
+
+%----------------------------------------------------------------------------------------
+%	DOCUMENT STRUCTURE COMMANDS
+%	Skip this unless you know what you're doing
+%----------------------------------------------------------------------------------------
+
+% Header and footer for when a page split occurs within a problem environment
+\newcommand{\enterProblemHeader}[1]{
+\nobreak\extramarks{#1}{#1 continued on next page\ldots}\nobreak
+\nobreak\extramarks{#1 (continued)}{#1 continued on next page\ldots}\nobreak
+}
+
+% Header and footer for when a page split occurs between problem environments
+\newcommand{\exitProblemHeader}[1]{
+\nobreak\extramarks{#1 (continued)}{#1 continued on next page\ldots}\nobreak
+\nobreak\extramarks{#1}{}\nobreak
+}
+
+\setcounter{secnumdepth}{0} % Removes default section numbers
+\newcounter{homeworkProblemCounter} % Creates a counter to keep track of the number of problems
+
+\newcommand{\homeworkProblemName}{}
+\newenvironment{homeworkProblem}[1][Problem \arabic{homeworkProblemCounter}]{ % Makes a new environment called homeworkProblem which takes 1 argument (custom name) but the default is "Problem #"
+\stepcounter{homeworkProblemCounter} % Increase counter for number of problems
+\renewcommand{\homeworkProblemName}{#1} % Assign \homeworkProblemName the name of the problem
+\section{\homeworkProblemName} % Make a section in the document with the custom problem count
+\enterProblemHeader{\homeworkProblemName} % Header and footer within the environment
+}{
+\exitProblemHeader{\homeworkProblemName} % Header and footer after the environment
+}
+
+\newcommand{\problemAnswer}[1]{ % Defines the problem answer command with the content as the only argument
+\noindent\framebox[\columnwidth][c]{\begin{minipage}{0.98\columnwidth}#1\end{minipage}} % Makes the box around the problem answer and puts the content inside
+}
+
+\newcommand{\homeworkSectionName}{}
+\newenvironment{homeworkSection}[1]{ % New environment for sections within homework problems, takes 1 argument - the name of the section
+\renewcommand{\homeworkSectionName}{#1} % Assign \homeworkSectionName to the name of the section from the environment argument
+\subsection{\homeworkSectionName} % Make a subsection with the custom name of the subsection
+\enterProblemHeader{\homeworkProblemName\ [\homeworkSectionName]} % Header and footer within the environment
+}{
+\enterProblemHeader{\homeworkProblemName} % Header and footer after the environment
+}
+
+%----------------------------------------------------------------------------------------
+%   DOCUMENT DEFINITIONS  	
+%  
+%----------------------------------------------------------------------------------------
+
+\newcommand{\hmwkTitle}{Homework 12} % Assignment title
+\newcommand{\hmwkClass}{APKC} % Course/class
+\newcommand{\hmwkClassTime}{} % Class/lecture time
+\newcommand{\hmwkClassInstructor}{} % Teacher/lecturer
+\newcommand{\hmwkAuthorName}{Sebastien Duc} % Your name
+%----------------------------------------------------------------------------------------
+%   MY INCLUDES	
+%   my package include and commands	
+%----------------------------------------------------------------------------------------
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+
+\newtheorem{thm}{Theorem}
+\newtheorem{lemma}{Lemma}
+
+\usepackage{algorithm,algorithmicx,algpseudocode}
+\usepackage{hyperref}
+
+\title{APKC - Homework 12}
+\author{Sebastien Duc}
+\date{\today}
+
+
+\newcommand {\zpz}[1]{\mathbb{Z}/#1\mathbb{Z}}
+\newcommand {\polyf}{\mathbb{Z}[x]}
+\newcommand {\sign}{\mathrm{sign}}
+\newcommand {\thus}{\Rightarrow\:}
+\newcommand {\nequiv}{\not\equiv}
+\newcommand {\fact}{\mathrm{fact}}
+\newcommand {\ord}{\mathrm{ord}}
+\newcommand {\lcm}{\mathrm{lcm}}
+\newcommand {\Lfunc}[2]{L_p[#1;#2]}
+\newcommand {\Ls}{\Lfunc{s}{\beta}}
+\newcommand {\Lr}{\Lfunc{r}{\alpha}}
+\newcommand {\Lrs}{\Lfunc{r-s}{-\alpha(r-s)/\beta}}
+
+\begin{document}
+\begin{center}
+    \Large{\textsc{Apkc - Homework 12}}
+\end{center}
+\subsection{12.1}
+\subsubsection{Initialization step}
+Let us start by analyzing the collection step.
+We set $B=\Ls$, for some $\beta$,$s$. We know that $p = \Lfunc{1}{1}$. Therefore by exercise 10.2 the probability that a random integer smaller than $p$ is $B$-smooth 
+is equal to $\Lfunc{1-s}{-(1-s)/\beta}$. So to find one $g^i$ such that this element is $B$-smooth, the expected number of elements we need to pick at random is
+$1/\Lfunc{1-s}{-(1-s)/\beta} = \Lfunc{1-s}{(1-s)/\beta}$. To test whether an element is $B$-smooth we can use as seen in class the ECM, and this can be done in $\Lfunc{s}{0}$.
+Furthermore we want to find at least $\pi(B)$ $B$-smooth $g^i$-s giving rise to linearly independant equations. But we have seen in class that $\pi(B) = B$.
+$O(B)$ equations is sufficient because the expected time needed to get the largest prime smaller or equal to $B$ as a prime factor is $O(B)$. By that time
+we got all other primes and have enough equations.
+Therefore the expected effort to collect our $g^i$-s is 
+\[
+    \Lfunc{s}{0}\cdot\Lfunc{1-s}{(1-s)/\beta} \cdot \Lfunc{s}{\beta}.
+\]
+We saw that we optimize this value by picking $s = 1/2$, we get $\Lfunc{1/2}{1/2\beta + \beta}$.
+And the optimal value for $\beta$ is $1/\sqrt{2}$. Thus we have a running time of $\Lfunc{1/2}{\sqrt{2}}$ for the collection step.
+
+For the second step, we need to solve a linear system, we have seen in class that when using Wiedmann method to solve it. The matrix of the linear system has
+$\pi(B)=B$ rows and $B$ columns. And this can be solved in $O(B^2)$. Thus the running time is $\Lfunc{1/2}{\sqrt{2}}$.
+\\
+
+Therefore for the initialization step the running time is $\Lfunc{1/2}{\sqrt{2}}$.
+
+\subsubsection{Computation step}
+For the computation step again we first need to find a $B$-smooth element $hg^j$. The rest is negligible.
+Finding the $hg^j$ can be done in $\Lfunc{1/2}{1/2\beta}\cdot\Lfunc{1/2}{0} = \Lfunc{1/2}{\sqrt{2}/2}$.
+Therefore the expected running time is not determined by this step.
+
+\subsubsection{Conclusion}
+The overall running time is determined by the running time of the initialization step, which is in $\Lfunc{1/2}{\sqrt{2}}$, and the optimal $B = \Lfunc{1/2}{1/\sqrt{2}}$.
+
+
+
+\subsection{12.2}
+Let us reanalyze the initialization step using the new method. 
+Again we set $B=\Ls$. Moreover we set $\tilde{B} = \Lr$.
+The selected $u_i$ are $B$-smooth with probability 
+\[
+    %OLD VERSION \Lfunc{1-s}{-\max\{1/2,\alpha\}(1-s)/\beta},
+    \Lfunc{1-s}{-(1-s)/2\beta}
+\] 
+because these values are of order 
+\[
+    %OLD VERSION \tilde{B} + \sqrt{p} = \Lr + \Lfunc{1}{1/2} = \Lfunc{1}{\max\{ 1/2, \alpha \}}.
+    \tilde{B} + \sqrt{p} = \Lr + \Lfunc{1}{1/2} = \Lfunc{1}{1/2}
+\]
+supposing that $r < 1$.
+Thus the expected work is %$\Lfunc{1}{\max\{1/2,\alpha\}(1-s)/\beta}$.
+$\Lfunc{1-s}{(1-s)/2\beta}$.
+
+Furthermore the probability that a pair $u_i,u_j$ generates a $B$-smooth value $u_iu_j -p$ given these two values is equal to
+\[
+    \Lfunc{1-s}{-(1-s)/2\beta}
+\]
+since the order of $u_iu_j -p$ is 
+\[
+    \tilde{B}(\tilde{B} + \sqrt{p}) = \Lfunc{r}{2\alpha} + \Lr \Lfunc{1}{1/2} = \Lfunc{1}{1/2}.
+\]
+The last equality follows from
+\[
+    \begin{split}
+        \Lr\Lfunc{1}{1/2} &= \exp\{(\alpha + o(1))(\log p)^r (\log\log p)^{1-r} + (1/2 + o(1))\log p\}\\
+                          &= \exp\left\{\log p \left[ 1/2 + o(1) + (\alpha + o(1))\left(\frac{\log\log p}{\log p}\right)^{1-r} \right]\right\}\\
+                          &= \exp\{\log p\cdot (1/2 + o(1))\}\\
+                          &= \Lfunc{1}{1/2}
+    \end{split}
+\]
+if we suppose that $r < 1$. 
+Therefore the expected number of $B$-smooth pair $u_i,u_j$ we need is equal to $\Lfunc{1-s}{(1-s)/2\beta}$.
+
+But with $n$ $u_i$ we can generate $\Theta(n^2)$ pairs.
+Thus to find the sufficient number of equations when $r < 1$ we need
+\[
+    \underbrace{\Lfunc{s}{\beta}}_{\#(u_i,u_j)\text{ needed}} \cdot 
+    \underbrace{\Lfunc{1-s}{(1-s)/4\beta}}_{E[\# u_i\text{ needed}]} \cdot 
+    \underbrace{\Lfunc{1-s}{(1-s)/2\beta}}_{E[\# \text{ trial needed to get one} u_i]} \cdot 
+    \underbrace{\Lfunc{s}{0}}_{\text{ECM}}.
+\]
+We need $\Lfunc{s}{\beta}$ equations, for each equations we need to test $\Lfunc{1-s}{(1-s)/2\beta}$ pairs. To have that number of pairs
+we need $\Lfunc{1-s}{(1-s)/4\beta}$ which is the square root of the number of needed pairs. To have one $u_i$ we need $\Lfunc{1-s}{(1-s)/2\beta}$ trials.
+Finally each time we need to check for $B$-smoothness we pay $\Lfunc{s}{0}$ (cost of ECM).
+
+The optimal value for $s$ is $1/2$. So we have
+\[
+    \Lfunc{1/2}{\beta + \frac{3}{8\beta}}
+\]
+and by minimizing for $\beta$: the derivative in 0 gives $\beta_{min} = \frac{1}{2}\sqrt{\frac{3}{2}}$.
+Finally the optimal complexity is given by $\Lfunc{1/2}{\sqrt{3/2}}$. This is a bit better than in the first question.
+The value for $B$ is $\Lfunc{1/2}{\sqrt{3/8}}$ and the value for $\tilde{B}$ is $\Lfunc{r}{\alpha}$ for any $\alpha$ and for any $0 \leq r < 1$. 
+
+We will suppose now that $r = 1$, i.e. $\tilde{B} = \Lfunc{1}{\alpha}$.
+The selected $u_i$ are $B$-smooth with probability
+\[
+    \Lfunc{1-s}{-\max\{1/2,\alpha\}(1-s)/\beta},
+\]
+because these values are of order 
+\[
+    \tilde{B} + \sqrt{p} = \Lfunc{1}{\max\{1/2,\alpha\}}.
+\]
+Thus the expected work is $\Lfunc{1}{\max\{1/2,\alpha\}(1-s)/\beta}$.
+
+Furthermore the probability that a pair $u_i,u_j$ generate a $B$-smooth value $u_iu_j - p$ given these two values is equal to
+\[
+    \Lfunc{1-s}{-\max\{2\alpha,\alpha+1/2\}(1-s)/\beta}
+\]
+since the order of $u_iu_j - p$ is
+\[
+    \tilde{B}(\tilde{B} + \sqrt{p}) = \Lfunc{1}{2\alpha} + \Lfunc{1}{\alpha}\Lfunc{1}{1/2} = \Lfunc{1}{\max\{2\alpha,\alpha + 1/2 \}}
+\]
+Therefore if we apply the same trick we applied when $r < 1$, we get that the expected work for the initialization step is
+\[
+    \Lfunc{s}{0}\cdot\Lfunc{1-s}{(\max\{1/2,\alpha\}+\max\{2\alpha,\alpha+1/2\}/2)(1-s)/\beta}\cdot\Lfunc{s}{\beta}.
+\]
+The optimal value for $s$ is 1/2. Consequently we get we get
+\[
+    \Lfunc{1/2}{\beta + (\max\{1/2,\alpha\}+\max\{\alpha,\alpha/2+1/4\})/2\beta} .%= \Lfunc{1/2}{\beta + \max\{1+\alpha,3\alpha\}/2\beta}.
+\]
+If $\alpha \leq 1/2$, then we have
+\[
+    \Lfunc{1/2}{\beta + (2\alpha + 3)/8\beta}
+\]
+And the optimal is exactly the same than the one we got for $r<1$. Namely $\Lfunc{1/2}{\sqrt{3/2}}A$ but this time
+$\tilde{B} = \Lfunc{1/2}{0}$ and as before $B = \Lfunc{1/2}{\sqrt{3/8}}$.
+
+If $\alpha > 1/2$ then we get
+\[
+    \Lfunc{1/2}{\beta + \alpha/\beta}
+\]
+By minimizing it for $\alpha$ we get $\Lfunc{1/2}{\beta + 1/2\beta}$ and this gives exactly the same result than in exercise 1.
+
+To conclude we can get an improvement: we have a running time of 
+\[
+    \Lfunc{1/2}{\sqrt{3/2}}
+\]
+for the data collection part.
+
+
+
+\subsection{12.3}
+When we work in a subgroup, we have to change something in the algorithm because we don't know which primes $s$ are in the subgroup and which primes are not.
+Therefore we will do the following: instead of first finding the discrete logarithms of primes $s < B$, we first start the computation step 
+by simply finding a $j$ such that $hg^j$ is $B$-smooth. Supposing that the found $gh^j = s_1^{e_1} \cdot \dots s_k^{e_k}$ we are only interested in
+finding the discrete logarithm of these specific primes, namely $s_1,\dots,s_k$.
+
+Therefore we do now the collection step and we find equation $i \equiv \sum_{s\leq B}e_{s,i}\log_g(s) \bmod{p-1}$ until we have enough equations to find 
+the discrete logs of $s_1,\dots,s_k$. We know that $g^i$ will have only prime factors that are in the subgroup.
+Finally  when we found these discrete logs we can find $\log_g(h)$.
+\end{document}

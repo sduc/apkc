@@ -1,0 +1,224 @@
+\documentclass[12pt,a4paper]{article}
+
+
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\usepackage{fancyhdr} % Required for custom headers
+\usepackage{lastpage} % Required to determine the last page for the footer
+\usepackage{extramarks} % Required for headers and footers
+\usepackage[usenames,dvipsnames]{color} % Required for custom colors
+\usepackage{graphicx} % Required to insert images
+\usepackage{listings} % Required for insertion of code
+\usepackage{courier} % Required for the courier font
+
+% Margins
+\topmargin=-0.45in
+\evensidemargin=0in
+\oddsidemargin=0in
+\textwidth=6.5in
+\textheight=9.0in
+\headsep=0.25in
+
+\linespread{1.1} % Line spacing
+
+% Set up the header and footer
+\pagestyle{fancy}
+\lhead{\hmwkAuthorName} % Top left header
+\chead{\hmwkClass } % Top center head
+\rhead{\hmwkTitle\firstxmark} % Top right header
+\lfoot{\lastxmark} % Bottom left footer
+\cfoot{} % Bottom center footer
+\rfoot{Page\ \thepage\ of\ \protect\pageref{LastPage}} % Bottom right footer
+\renewcommand\headrulewidth{0.4pt} % Size of the header rule
+\renewcommand\footrulewidth{0.4pt} % Size of the footer rule
+
+%----------------------------------------------------------------------------------------
+%	DOCUMENT STRUCTURE COMMANDS
+%	Skip this unless you know what you're doing
+%----------------------------------------------------------------------------------------
+
+% Header and footer for when a page split occurs within a problem environment
+\newcommand{\enterProblemHeader}[1]{
+\nobreak\extramarks{#1}{#1 continued on next page\ldots}\nobreak
+\nobreak\extramarks{#1 (continued)}{#1 continued on next page\ldots}\nobreak
+}
+
+% Header and footer for when a page split occurs between problem environments
+\newcommand{\exitProblemHeader}[1]{
+\nobreak\extramarks{#1 (continued)}{#1 continued on next page\ldots}\nobreak
+\nobreak\extramarks{#1}{}\nobreak
+}
+
+\setcounter{secnumdepth}{0} % Removes default section numbers
+\newcounter{homeworkProblemCounter} % Creates a counter to keep track of the number of problems
+
+\newcommand{\homeworkProblemName}{}
+\newenvironment{homeworkProblem}[1][Problem \arabic{homeworkProblemCounter}]{ % Makes a new environment called homeworkProblem which takes 1 argument (custom name) but the default is "Problem #"
+\stepcounter{homeworkProblemCounter} % Increase counter for number of problems
+\renewcommand{\homeworkProblemName}{#1} % Assign \homeworkProblemName the name of the problem
+\section{\homeworkProblemName} % Make a section in the document with the custom problem count
+\enterProblemHeader{\homeworkProblemName} % Header and footer within the environment
+}{
+\exitProblemHeader{\homeworkProblemName} % Header and footer after the environment
+}
+
+\newcommand{\problemAnswer}[1]{ % Defines the problem answer command with the content as the only argument
+\noindent\framebox[\columnwidth][c]{\begin{minipage}{0.98\columnwidth}#1\end{minipage}} % Makes the box around the problem answer and puts the content inside
+}
+
+\newcommand{\homeworkSectionName}{}
+\newenvironment{homeworkSection}[1]{ % New environment for sections within homework problems, takes 1 argument - the name of the section
+\renewcommand{\homeworkSectionName}{#1} % Assign \homeworkSectionName to the name of the section from the environment argument
+\subsection{\homeworkSectionName} % Make a subsection with the custom name of the subsection
+\enterProblemHeader{\homeworkProblemName\ [\homeworkSectionName]} % Header and footer within the environment
+}{
+\enterProblemHeader{\homeworkProblemName} % Header and footer after the environment
+}
+
+%----------------------------------------------------------------------------------------
+%   DOCUMENT DEFINITIONS  	
+%  
+%----------------------------------------------------------------------------------------
+
+\newcommand{\hmwkTitle}{Homework 10} % Assignment title
+\newcommand{\hmwkClass}{APKC} % Course/class
+\newcommand{\hmwkClassTime}{} % Class/lecture time
+\newcommand{\hmwkClassInstructor}{} % Teacher/lecturer
+\newcommand{\hmwkAuthorName}{Sebastien Duc} % Your name
+%----------------------------------------------------------------------------------------
+%   MY INCLUDES	
+%   my package include and commands	
+%----------------------------------------------------------------------------------------
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+
+\newtheorem{thm}{Theorem}
+\newtheorem{lemma}{Lemma}
+
+\usepackage{algorithm,algorithmicx,algpseudocode}
+\usepackage{hyperref}
+
+\title{APKC - Homework 10}
+\author{Sebastien Duc}
+\date{\today}
+
+
+\newcommand {\zpz}[1]{\mathbb{Z}/#1\mathbb{Z}}
+\newcommand {\polyf}{\mathbb{Z}[x]}
+\newcommand {\sign}{\mathrm{sign}}
+\newcommand {\thus}{\Rightarrow\:}
+\newcommand {\nequiv}{\not\equiv}
+\newcommand {\fact}{\mathrm{fact}}
+\newcommand {\ord}{\mathrm{ord}}
+\newcommand {\lcm}{\mathrm{lcm}}
+\newcommand {\Lfunc}[2]{L_x[#1;#2]}
+\newcommand {\Ls}{\Lfunc{s}{\beta}}
+\newcommand {\Lr}{\Lfunc{r}{\alpha}}
+\newcommand {\Lrs}{\Lfunc{r-s}{-\alpha(r-s)/\beta}}
+
+\begin{document}
+
+\section{10.1}
+First we need to find all primes smaller than $B$. For that we can use a sieve. Let $C_{SIEVE}(B)$ be the cost for a sieve which finds prime smaller than $B$.
+Since we need to find the prime power smaller than $B$, for every prime we found we need at most $\log(B)$ multiplications, because $2$ is the smallest prime 
+and $2^{\log B} = B$. We know that for a given $B$  we find $\pi(B)$ primes smaller than $B$. Thus we get a complexity in $O(C_{SIEVE} + \pi(B)\log(B)M(B))$, where
+$M(B)$ is the cost of a multiplication when the two operands are $\leq B$. 
+
+After that we need to compute $a^M - 1$ so that we can compute $\gcd(n,a^M -1)$.
+But before we will prove that we can compute $a^M-1 \bmod n$ instead, because 
+\[
+    \gcd(n,a^M-1) = \gcd(n,a^M -1 \bmod n).
+\]
+Suppose $d = \gcd(n,a^M-1)$ then $n = kd$ and $a^M - 1 = ld$ for $k,l\in \mathbb{Z}$. Thus $a^M - 1 \bmod n = ld \bmod n = ld - rkd = (l-rk)l$,
+and $\gcd(k,l-rk) = \gcd(k,l) = 1$. Hence $\gcd(n,a^M-1) = \gcd(n,a^M -1 \bmod n)$.
+
+To compute $a^M -1 \bmod n$ we can use square and multiply. Furthermore we do the following $r = 1$ and for every prime power $p^k$ we found we compute 
+$r = r \cdot a^{p^k} \bmod n$. So in the end get $r =  a^M$, we just compute $r = r-1 \bmod n = a^M -1 \bmod n$.
+For every prime power (we have $\pi(B)$ of them) we need $\log(p^k) \leq \log(B)$ multiplications.
+Thus the cost for to get $a^M -1 \bmod n$ is in $O(\log(B)\pi(B)M(n))$ where $M(n)$ is the cost of a multiplication modulo $n$.
+
+Finally we can compute the gcd in $O(\log^2 n)$ using binary gcd algorithm.
+Therefore the total complexity is
+\[
+    O(C_{SIEVE} + \pi(B)\log(B)M(B) + \log(B)\pi(B)M(n) + \log^2 n).
+\]
+We know that $C_{SIEVE} = B\log\log B$ when using the sieve of Eratosthenes. We also know that $\pi(B) \approx \frac{B}{\log B}$.
+And $M(n)$ is in $O(\log^2 n )$ when using schoolbook multiplication. Similarly $M(B)$ is in $O(\log^2 B)$.
+Consequently the total complexity is
+\[
+    O(B\log^2n).
+\]
+\section{10.2}
+The probability of having a $\Lfunc{s}{\beta}$-smooth integer $n$ given that $n \leq \Lfunc{r}{\alpha}$ is given by
+\[
+    \frac{\psi(\Lfunc{r}{\alpha},\Lfunc{s}{\beta})}{\Lfunc{r}{\alpha}}.
+\]
+Let us see how to compute $\psi(\Lr,\Ls)$.
+We know that for an arbitrary $\epsilon>0$ and for $u \leq (\log\Lr)^{1-\epsilon}$, $\psi(\Lr,\Lr^{1/u}) = \Lr u^{-u+o(1)}$.
+Therefore we want to have $u\leq (\log\Lr)^{1-\epsilon}$ s.t. $\Lr^{1/u} = \Ls$.
+We have
+\[
+    \begin{array}{l r l}
+        & \Lr^{1/u} &= \Ls       \\
+   \iff & \log\Lr u^{-1} &= \log\Ls\\
+   \iff & (\alpha + o(1))(\log x)^r(\log\log x)^{1-r} u^{-1} &= (\beta + o(1))(\log x)^s (\log\log x)^{1-s}\\
+   \iff & u &= \frac{\alpha + o(1)}{\beta + o(1)} (\log x)^{r-s}(\log\log x)^{s-r}\\
+    \end{array}
+\]
+We still need to show that for some $\epsilon > 0$, our $u$ is smaller or equal to $(\log\Lr)^{1-\epsilon}$.
+Indeed, \[(\log x)^{r-s} \leq (\log x)^{r(1-\epsilon)}\] for $0 < \epsilon < s/r$, \[(\log\log x)^{s-r} \leq (\log\log x)^{(1-r)(1-\epsilon)}\] for $0 < \epsilon < \frac{1-s}{1-r}$
+and finally \[\frac{\alpha + o(1)}{\beta + o(1)} \leq (\alpha + o(1))^{1-\epsilon}\] for $\alpha^{\epsilon} \leq \beta + o(1) \:\thus 0 < \epsilon \leq \frac{\log\beta}{\log\alpha}$ if 
+$\alpha \geq 1$ and $\epsilon > \max\{0,\frac{\log\beta}{\log\alpha}\}$ if $\alpha < 1$.
+
+Given our $u$, we get
+\[
+    \begin{split}
+        \psi(\Lr,\Ls) &= \Lr e^{-u\log u + o(1)}\\
+                      &= \Lr e^{-(\frac{\alpha}{\beta} + o(1))(\log x)^{r-s}(\log\log x)^{s-r}\log u}
+    \end{split}
+\]
+Therefore the probability is given by
+\[
+    \begin{split}
+        &\exp\left\{-\left(\frac{\alpha}{\beta} + o(1)\right)(\log x)^{r-s}(\log\log x)^{r-s}\log u\right\}\\
+    \mbox{with } &\log u = \left(\log\left(\frac{\alpha}{\beta} + o(1)\right) + (r-s)\log\log x + (s-r)\log\log\log x \right)\\
+           \thus &\mbox{ the probability is } \Lrs^{1 + \frac{\log(\frac{\alpha}{\beta} + o(1)) + (s-r)\log\log\log x}{\log\log x}}
+    \end{split}
+\]
+But the probability tends to $\Lrs$ as $x$ goes to infinity since 
+\[
+    \lim_{x\rightarrow\infty}\frac{\log(\frac{\alpha}{\beta} + o(1)) + (s-r)\log\log\log x}{\log\log x} = 0.
+\]
+Hence the result.
+\section{10.3}
+\subsection{10.3.1}
+Let $f(X) = \sum_{i=0}^n a_i X^i \in \mathbb{Z}[X]$.
+$q$ divides $f(p)$ iff $f(r)\mid f(p)$. Furthermore
+\[
+    \begin{split}
+        f(p) &= f(r + kf(r)) = \sum_{i=0}^n a_i(r+kf(r))^i\\
+             &= \sum_{i=0}^n a_i \sum_{j=0}^i \binom{i}{j}r^j (kf(r))^{i-j}\\
+             &= \sum_{i=0}^n a_i \sum_{j=0}^{i-1} \binom{i}{j}r^j (kf(r))^{i-j} + \sum_{i=0}^n a_i r^i\\
+             &= f(r)\sum_{i=0}^n a_i \sum_{j=0}^{i-1} \binom{i}{j}r^j k^{i-j}(f(r))^{i-1-j} + f(r)
+    \end{split}
+\]
+Consequently $f(r) \mid f(p)$.
+\subsection{10.3.2}
+For this exercise we use the hint we just proved combined with cyclotomic polynomials. 
+We want to find two primes $p,q$ such that $q \mid p^k - 1$ but $q \nmid p^s - 1$ for all $s\mid k$.
+We know that the $k$-th cyclotomic polynomial $\Phi_k(X)$ divides $X^k - 1$ and but does not divide $X^s - 1$ for all $s \mid k$.
+
+Therefore what will do is, first find $r$ s.t. $q =\Phi_k(r)$ is prime then using the hint we try to find $p = r + a\cdot q$ prime.
+We just have to make sure that $p,q$ are in the correct range. The property of cyclotomic polynomials ensures that $p,q$ have the required properties.
+
+To find the generator for $k=1$, we use the fact the for a $h \in (\mathbb{F}_p)^*$, if $g = h^{(p-1)/q} \neq 1$ then $g$ has order $q$.
+
+\textbf{Remark:} the case $k=7$, $(L,B) = (160,1024)$ is a bit different as $p < q$ if $p^7$ has 1024 bits. Therefore we are forced to choose $p$ such that $p^7$
+ has more than 1024 bits.
+
+\end{document}

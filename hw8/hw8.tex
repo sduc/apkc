@@ -1,0 +1,221 @@
+\documentclass[12pt,a4paper]{article}
+
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+
+\newtheorem{thm}{Theorem}
+
+\usepackage{algorithm,algorithmicx,algpseudocode}
+\usepackage{hyperref}
+\usepackage{listings,color}
+
+\title{APKC - Homework 8}
+\author{Sebastien Duc}
+\date{\today}
+
+\newcommand {\zpz}[1]{\mathbb{Z}/#1\mathbb{Z}}
+\newcommand {\polyf}{\mathbb{Z}[x]}
+\newcommand {\sign}{\mathrm{sign}}
+\newcommand {\thus}{\Rightarrow\:}
+\newcommand {\nequiv}{\not\equiv}
+\newcommand {\fact}{\mathrm{fact}}
+\newcommand {\ord}{\mathrm{ord}}
+\newcommand {\lcm}{\mathrm{lcm}}
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\usepackage{xcolor}
+\usepackage{caption}
+%\DeclareCaptionFont{white}{\color{white}}
+%\DeclareCaptionFormat{listing}{%
+%  \parbox{\textwidth}{\colorbox{gray}{\parbox{\textwidth}{#1#2#3}}\vskip-4pt}}
+%  \captionsetup[lstlisting]{format=listing,labelfont=white,textfont=white}
+
+\lstset{ %
+    language=Python,                % the language of the code
+    basicstyle=\footnotesize,       % the size of the fonts that are used for the code
+    backgroundcolor=\color{white},      % choose the background color. You must add \usepackage{color}
+    showspaces=false,               % show spaces adding particular underscores
+    showstringspaces=false,         % underline spaces within strings
+    showtabs=false,                 % show tabs within strings adding particular underscores
+    frame=single,                   % adds a frame around the code
+    rulecolor=\color{black},        % if not set, the frame-color may be changed on line-breaks within not-black text (e.g. comments (green here))
+    tabsize=2,                      % sets default tabsize to 2 spaces
+    captionpos=b,                   % sets the caption-position to bottom
+    breaklines=true,                % sets automatic line breaking
+    breakatwhitespace=false,        % sets if automatic breaks should only happen at whitespace
+    title=\lstname,                   % show the filename of files included with \lstinputlisting;
+    % also try caption instead of title
+    keywordstyle=\color{blue},          % keyword style
+    commentstyle=\color{dkgreen},       % comment style
+    stringstyle=\color{mauve},         % string literal style
+    escapeinside={\%*}{*)},            % if you want to add LaTeX within your code
+    morekeywords={*,...},              % if you want to add more keywords to the set
+    deletekeywords={...}              % if you want to delete keywords from the given language
+    xleftmargin=\fboxsep,xrightmargin=-\fboxsep
+}
+
+\begin{document}
+\maketitle
+
+\section*{8.1}
+
+\subsection*{(a)}
+Let us first consider the factorization of $f$ into monic distinct irreducible polynomial $p_i$:
+\[
+    f(X) = c \prod_{i=1}^{k}{p_i(X)^{e_i}} \quad\mbox{,where } 0<e_i\leq n, \forall\: 1 \leq i \leq k \mbox{, and $c\in F_q$}.
+\]
+We know that this factorization is unique.
+Now consider the following polynomials
+\[
+    f_i(X) = \prod_{1 \leq j \leq k:e_j = i}p_j(X)
+\]
+for $i = 1$ to $n$ (because $1 \leq e_i \leq n$).
+Then we get that $f$ can be uniquely decomposed as follows
+\[
+    f(X) = c f_1(X)f_2(X)^2\dots f_n(X)^n
+\]
+Furthermore, when $i\neq j$ $\gcd(f_i(X),f_j(X)) = 1$ because they are both products of monic irreducible primes and
+with none of them in both $f_i(X)$ and $f_j(X)$. Finally they are square-free because all the $p_j$'s are square-free and 
+the only divisors of the $f_i$'s are the $p_j$'s. Hence the result.
+
+
+\subsection*{(b)}
+We use Yun's algorithm~\cite{wiki} to find the decomposition.
+\begin{algorithm}
+    \caption{Yun's Algorithm}
+    \begin{tabular}{l l}
+        \textbf{Input:} & $ f \in \mathbb{F}_q[X] $ of degree $n$\\
+        \textbf{Output:} & $ (f_1,\dots,f_n) $ all monic, square free and pairwise relatively prime\\
+    \end{tabular}
+    \begin{algorithmic}[1]
+        \State $f_0 \gets \gcd(f,f')$
+        \State $b \gets f/f_0$
+        \State $c \gets f'/f_0$
+        \State $d \gets c - b'$
+        \State $i \gets 1$
+        \Repeat
+            \State $f_i \gets \gcd(b_i,d_i)$
+            \State $b \gets b/f_i$
+            \State $c \gets d/f_i$
+            \State $i \gets i+1$
+            \State $d \gets c - b'$
+        \Until{$b=1$}
+    \end{algorithmic}
+\end{algorithm}
+\subsection*{(c)}
+In the implementation, only the polynomial is needed as input because the field in which it was defined can be recovered.
+Function \texttt{test\_factor\_random} is provided to test on a random polynomial of a given degree in a finite field. 
+
+\belowcaptionskip=-10pt
+\begin{lstlisting}[label=fact,caption=Yun's Algorithm]
+def is_monic(f):
+    return f.coefficients()[-1] == 1
+
+def factor_poly(f):
+    return yun_fact(f)
+
+def yun_fact(f):
+    f *= f.coefficients()[-1]**(-1)
+    out = []
+    b = f
+    d = f.derivative()
+    while not b.is_one():
+        a = b.gcd(d)
+        assert is_monic(a)
+        out.append(a)
+        b = b // a
+        c = d // a
+        d = c - b.derivative()
+    return out[1:] 
+
+# tests factor poly on a random poly in F_p^k[X] with a poly of degree n
+def test_factor_random(p,k,n):
+    Fq.<X> = GF(p**k,name='a')[['X']]
+    f = Fq.random_element(n+1).polynomial()
+    fact = factor_poly(f)
+    print "obtained factorization:" , fact
+    
+    test_f = f.coefficients()[-1]
+    for a,i in zip(fact,range(1,len(fact)+1)):
+        assert a.is_squarefree()
+        test_f *= a**i
+    print test_f , "==" , f
+    assert test_f == f
+\end{lstlisting}
+
+\subsection*{(d)}
+The following two functions are implemented for the purpose of this exercise.
+\begin{lstlisting}[caption=Test Factorization]
+# (d) part of the exercise
+# test polynomial given
+def test_factor():
+    Fq.<X> = GF(5)[['X']]
+    f = 3*X^10 + 4*X^7 + 4*X^5 + X^4 + X^3 + 2*X^2 + X + 4
+    print "f has factorization" , factor_poly(f.polynomial())
+
+# (d) part of the exercise
+# test with sciper generated polynomial
+def test_poly_from_sciper(sciper):
+    F.<X> = GF(11)[['X']]
+    poly = 1
+    for i in range(10):
+        if i in sciper.digits():
+            poly *= (X - i)**i
+    print "f (from sciper) has factorization" , factor_poly(poly.polynomial())
+\end{lstlisting}
+
+\section*{8.2}
+Let us define the following
+\[
+    \begin{array}{l l}
+        S_g &= \{ s \in \mathbb{F}_q \mid \gcd(f(X),g(X)-s) \neq 1 \} \\
+        h_g(X) &= \prod_{s\in S_g} (X - s)\\
+    \end{array}
+\]
+Then if we can compute $h_g$, we just need to find the roots of this polynomial.
+Let us see now how to find $h_g$. First consider the following theorem.
+\begin{thm}
+    Polynomial $h_g(X) = \prod_{s\in S_g} (X - s)$ is the minimal polynomial for $g(X)$. That is, $h_g(X)$ is the polynomial with the smallest degree
+    such that \[h_g(g(X)) \equiv 0 \pmod{f(X)}.\]
+\end{thm}
+\begin{proof}
+    Pick an arbitrary factor $f_i(X)$ of $f(X)$, it must be true that $f_i(X) \mid \gcd(f(X),g(X) - s)$ for some $s \in S_g$.
+    Therefore $f_i(X) \mid (g(X) - s)$ for some $s\in S_g$. Saying that for an arbitrary factor of $f(X)$ leads us to
+    \[
+        f(X) \mid \prod_{s\in S_g}(g(X) - s)  = h_g(g(X))
+    \]
+    Hence $h_g(g(X)) \equiv 0 \pmod{f(X)}$.
+
+    Now we need to show that the degree of $h_g$ is minimal.
+    Suppose by contradiction that there exist a polynomial $h$ with smaller degree such that $h(g(X)) \equiv 0 \pmod{f(X)}$.
+    Then there must exist an $s \in S_g$ such that $h(X) = q(X) \cdot (X - s) + r$, where $r$ is nonzero element in $\mathbb{F}_q$.
+    We know that one factor $f_i$ of $f$ divides $g(X) - s$. But since $h(g(X)) \equiv 0 \pmod{f(X)}$, $f_i$ divides $h(g(X))$.
+    Furthermore, $h(g(X)) = q(g(X)) \cdot (g(X) - s) + r$. This implies that $f_i(X) \mid r$ (since $f_i(X)\mid h(g(X))$ and $f_i(X) \mid (X - s)$).
+    But $r$ is in $\mathbb{F}_q$, which is a contradiction. Hence the minimality of $h_g$.
+\end{proof}
+
+To find the minimal polynomial for $g(X)$, we proceed as follows: we iteratively compute $g(X)^k \bmod f(X)$ starting with $k = 1$. To compute 
+$g(X)^{k+1} \bmod f(X)$ we just multiply $g(X)^k \bmod f(X)$ with $g(X) \bmod f(X)$. At each step $k$ we solve the following $n$ by $k$ system, $n$ being the degree of $f$
+\[
+    h_0 + h_1 g(X) + h_2 g(X)^2 + \dots + h_{k-1}g(X)^{k-1} + g(X)^k \equiv 0 \pmod{f(X)}
+\]
+until the solution is nontrivial. The nontrivial solution is found at step $k=r$ ($r$ is the number of irreducible factors of $f$).
+When the solution $(h_0,h_1,\dots,h_{r-1})$ is found, the polynomial $h_g$ is simply
+\[
+    h_g(X) = h_0 + h_1 X + \dots + h_{r-1} X^{r-1} + X^r
+\]
+and we just have to find the roots of this polynomial to factor $f$.
+
+
+\begin{thebibliography}{1}
+    \bibitem{wiki}
+        Wikipedia, \emph{Square-free polynonmial}\\
+        \url{http://en.wikipedia.org/wiki/Square-free\_polynomial}
+\end{thebibliography}
+
+\end{document}

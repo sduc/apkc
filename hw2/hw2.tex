@@ -1,0 +1,70 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\title{Homework 1}
+\author{Sebastien Duc}
+\date{\today}
+
+\begin{document}
+\maketitle
+\section*{2.1}
+\subsection*{(a)}
+First we notice that when $k > N$ , then the probability is 0. 
+If $k \leq N$, then the probability is
+\[
+    \frac{N\cdot(N-1)\cdot...\cdot(N-k+1)}{N\cdot N \cdot ... \cdot N} = \frac{N!}{(N-k)!N^k}
+\]
+
+\subsection*{(b)}
+This is an application of the probability we found in (a). In this case we let $N=365$ (the number of days in a year).
+Let $k$ be the number of people in the room. Then we want
+\[
+    1 - \frac{N!}{(N-k)!N^k} \geq \frac 1 2
+\]
+or $\frac{N!}{(N-k)!N^k} \leq \frac 1 2$. By trying a few values, we find that for $k=22$ we have $\frac{N!}{(N-k)!N^k} \approx 0.52$ and for 
+$k = 23$ we have $\frac{N!}{(N-k)!N^k} \approx 0.49$. Thus the minium number of people is 23.
+
+\subsection*{(c)}
+Let us define the descrete RV $X$ as the number of draws needed to record one and the same color twice.
+Then,
+\[
+    \begin{split}
+        E(X) &= \sum_{k \geq 1}{\Pr(X \geq k)} = \sum_{k \geq  1}{\left(\Pr(X > k) + \Pr(X = k)\right)}\\
+             &= \sum_{k \geq 1}{\Pr(X > k)} + 1\\
+    \end{split}
+\]
+Now we see that when $k > N, \Pr(X>k) = 0$ and when $k \leq N$, using (a) $\Pr(X > k) = \frac{N!}{(N-k)!N^k}$. Finally we have
+\[
+    E(X) = 1 + \sum_{1\leq k \leq N}{\frac{N!}{(N-k)!N^k}} = 1 + Q(N)
+\]
+
+\subsection*{(d)}
+Using the bound we find that,
+\[
+    \begin{split}
+        E(X) &\sim 1 + \sqrt{\frac{\pi N}2} -\frac 1 3 + \frac 1 {12} \sqrt{\frac{\pi}{2 N}} - \frac 4 {135 N} + ...\\
+             &\sim \sqrt{\frac{\pi N}2} 
+    \end{split}
+\]
+
+\section*{2.2}
+\subsection*{(a)}
+The algorithm used for this exercise was found in \cite{lenstra}.
+The code can be found in file \texttt{hw2.sage} and the function name is \texttt{extend2rsa}.
+A example using the sciper number can be found in worksheet \texttt{hw2\_2.2a.sws}.
+
+\subsection*{(b)}
+The algorithm used in this case was adapted from the previous one. The function name is \texttt{gen\_rsa\_rev\_prime} in file \texttt{hw2.sage}.
+The function takes the number of digits $K$ the primes $p$ and $q$ will have.
+
+\section*{2.3}
+There is a python script to help to run our program.
+We provide a readme which explains how to use the script.
+
+\begin{thebibliography}{1}
+\bibitem{lenstra}
+    Arjen K. Lenstra. Generating RSA Moduli with a Predetermined Portion.
+    In \emph{Advances in Cryptology - ASIACRYPT'88}, volume 330 of \emph{Lecture Notes in Computer Science}, pages 87-95. Springer, 1988. 
+\end{thebibliography}
+\end{document} 

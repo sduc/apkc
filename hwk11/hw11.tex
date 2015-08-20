@@ -1,0 +1,255 @@
+\documentclass[12pt,a4paper]{article}
+
+
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\usepackage{fancyhdr} % Required for custom headers
+\usepackage{lastpage} % Required to determine the last page for the footer
+\usepackage{extramarks} % Required for headers and footers
+\usepackage[usenames,dvipsnames]{color} % Required for custom colors
+\usepackage{graphicx} % Required to insert images
+\usepackage{listings} % Required for insertion of code
+\usepackage{courier} % Required for the courier font
+
+% Margins
+\topmargin=-0.45in
+\evensidemargin=0in
+\oddsidemargin=0in
+\textwidth=6.5in
+\textheight=9.0in
+\headsep=0.25in
+
+\linespread{1.1} % Line spacing
+
+% Set up the header and footer
+\pagestyle{fancy}
+\lhead{\hmwkAuthorName} % Top left header
+\chead{\hmwkClass } % Top center head
+\rhead{\hmwkTitle\firstxmark} % Top right header
+\lfoot{\lastxmark} % Bottom left footer
+\cfoot{} % Bottom center footer
+\rfoot{Page\ \thepage\ of\ \protect\pageref{LastPage}} % Bottom right footer
+\renewcommand\headrulewidth{0.4pt} % Size of the header rule
+\renewcommand\footrulewidth{0.4pt} % Size of the footer rule
+
+%----------------------------------------------------------------------------------------
+%	DOCUMENT STRUCTURE COMMANDS
+%	Skip this unless you know what you're doing
+%----------------------------------------------------------------------------------------
+
+% Header and footer for when a page split occurs within a problem environment
+\newcommand{\enterProblemHeader}[1]{
+\nobreak\extramarks{#1}{#1 continued on next page\ldots}\nobreak
+\nobreak\extramarks{#1 (continued)}{#1 continued on next page\ldots}\nobreak
+}
+
+% Header and footer for when a page split occurs between problem environments
+\newcommand{\exitProblemHeader}[1]{
+\nobreak\extramarks{#1 (continued)}{#1 continued on next page\ldots}\nobreak
+\nobreak\extramarks{#1}{}\nobreak
+}
+
+\setcounter{secnumdepth}{0} % Removes default section numbers
+\newcounter{homeworkProblemCounter} % Creates a counter to keep track of the number of problems
+
+\newcommand{\homeworkProblemName}{}
+\newenvironment{homeworkProblem}[1][Problem \arabic{homeworkProblemCounter}]{ % Makes a new environment called homeworkProblem which takes 1 argument (custom name) but the default is "Problem #"
+\stepcounter{homeworkProblemCounter} % Increase counter for number of problems
+\renewcommand{\homeworkProblemName}{#1} % Assign \homeworkProblemName the name of the problem
+\section{\homeworkProblemName} % Make a section in the document with the custom problem count
+\enterProblemHeader{\homeworkProblemName} % Header and footer within the environment
+}{
+\exitProblemHeader{\homeworkProblemName} % Header and footer after the environment
+}
+
+\newcommand{\problemAnswer}[1]{ % Defines the problem answer command with the content as the only argument
+\noindent\framebox[\columnwidth][c]{\begin{minipage}{0.98\columnwidth}#1\end{minipage}} % Makes the box around the problem answer and puts the content inside
+}
+
+\newcommand{\homeworkSectionName}{}
+\newenvironment{homeworkSection}[1]{ % New environment for sections within homework problems, takes 1 argument - the name of the section
+\renewcommand{\homeworkSectionName}{#1} % Assign \homeworkSectionName to the name of the section from the environment argument
+\subsection{\homeworkSectionName} % Make a subsection with the custom name of the subsection
+\enterProblemHeader{\homeworkProblemName\ [\homeworkSectionName]} % Header and footer within the environment
+}{
+\enterProblemHeader{\homeworkProblemName} % Header and footer after the environment
+}
+
+%----------------------------------------------------------------------------------------
+%   DOCUMENT DEFINITIONS  	
+%  
+%----------------------------------------------------------------------------------------
+
+\newcommand{\hmwkTitle}{Homework 10} % Assignment title
+\newcommand{\hmwkClass}{APKC} % Course/class
+\newcommand{\hmwkClassTime}{} % Class/lecture time
+\newcommand{\hmwkClassInstructor}{} % Teacher/lecturer
+\newcommand{\hmwkAuthorName}{Sebastien Duc} % Your name
+%----------------------------------------------------------------------------------------
+%   MY INCLUDES	
+%   my package include and commands	
+%----------------------------------------------------------------------------------------
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+
+\newtheorem{thm}{Theorem}
+\newtheorem{lemma}{Lemma}
+
+\usepackage{algorithm,algorithmicx,algpseudocode}
+\usepackage{hyperref}
+
+\title{APKC - Homework 11}
+\author{Sebastien Duc}
+\date{\today}
+
+
+\newcommand {\zpz}[1]{\mathbb{Z}/#1\mathbb{Z}}
+\newcommand {\polyf}{\mathbb{Z}[x]}
+\newcommand {\sign}{\mathrm{sign}}
+\newcommand {\thus}{\Rightarrow\:}
+\newcommand {\nequiv}{\not\equiv}
+\newcommand {\fact}{\mathrm{fact}}
+\newcommand {\ord}{\mathrm{ord}}
+\newcommand {\lcm}{\mathrm{lcm}}
+\newcommand {\Lfunc}[2]{L_x[#1;#2]}
+\newcommand {\Ls}{\Lfunc{s}{\beta}}
+\newcommand {\Lr}{\Lfunc{r}{\alpha}}
+\newcommand {\Lrs}{\Lfunc{r-s}{-\alpha(r-s)/\beta}}
+
+\begin{document}
+    \section{11.1}
+    \subsection{11.1.1}
+        The function for this part is \texttt{gen\_rand\_rsa\_1}. The algorithm is simple.
+        To get $p$ we generate a random prime $a$ of at least 120 bits. Then we try to find $p$ s.t.
+        $p = 1 + k \cdot a$, with $p$ prime. This ensures that $p$ is not $120$-smooth.
+        We repeat exactly the same for $q$.
+    \subsection{11.1.2}
+        The function for this parti s \texttt{gen\_rsa\_moduli\_2}. The algorithm is similar to the previous one.
+        But in that case we need to apply the CRT. To get $p$ we generate two random prime $p_1,p_2$ of at least 120 bits.
+        We want that $p_1 \mid p-1$ and $p_2 \mid p+1$. Therefore
+        \[
+            \begin{array}{l l r l}
+                p &\equiv & 1 &\pmod{p_1}\\
+                p &\equiv &-1 & \pmod{p_2}.\\
+            \end{array}
+        \]
+        By applying the CRT, we have that $p \equiv p_2\cdot (p_2^{-1} \bmod p_1) - p_1 \cdot (p_1^{-1} \bmod p_2) \pmod{p_1p_2}$.
+        Using that trick, we can find $p$ prime s.t. $p = p_2\cdot (p_2^{-1} \bmod p_1) - p_1 \cdot (p_1^{-1} \bmod p_2) + k\cdot p_1p_2$.
+
+        %The property that $p+1$ and $q+1$ are not 120-smooth is useless since we are generating an RSA modulus. An attacker is only interested to get $\varphi(n) = (p-1)(q-1)$
+        %as this allows him to recover the private key given the public key.
+        The property that $p+1$ and $q+1$ are not 120-smooth is useless since the factoring algorithm for RSA moduli cannot exploit $p+1$, it only uses $p-1$.
+    \subsection{11.1.3}
+        First we see that since $r \equiv 3 \pmod 4$ which implies that $r = 3 + 4 \cdot k$, $a^{(r+1)/4} \bmod r = a^{(1 + k)}$ with $1+k \in \mathbb{Z}$.
+        Furthermore
+        \[
+            \left(a^{(r+1)/2}\right)^2 \bmod r = a^{(r+1)/2} \bmod r = (\sqrt{a})^{r+1} \bmod r = ((\sqrt{a})^{r-1}\bmod r) \cdot a = a
+        \]
+    \subsection{11.1.4}
+        This uses exactly the same trick that was used in part 2. Namely, to get $p$ we generate 4 random primes $p_1,p_2,p_3,p_4$ of at least 120 bits and we
+        make sure that $p_i \mid \Phi_i(p)$.
+        \[
+            \begin{array}{l l r l}
+                p &\equiv & 1 &\pmod{p_1}\\
+                p &\equiv & -1&\pmod{p_2}\\
+       p^2 + p + 1&\equiv & 0 &\pmod{p_3}\\
+               p^2&\equiv & -1&\pmod{p_4}.\\
+            \end{array}
+        \]
+        $-1$ is a quadratic residue mod $p_4$ only when $(-1)^{(p_4+1)/2} \equiv 1 \bmod{p_4} \thus p_4 \bmod 4 = 1$. 
+        Furthermore $p^2 + p + 1 \equiv 0 \pmod{p_3}$ implies that $p \equiv \frac{-1 + \sqrt{-3}}{2} \pmod{p_3}$.
+        But this is possible only when $-3$ is a quadratic residue mod $p_3$ iff the legendre symbol $\left( \frac{-3}{p_3}\right) = 1$.
+        To compute $\sqrt{-3}$ we use $\sqrt{-3} \equiv (-3)^{(p_3+1)/4} \pmod{p_3}$.
+
+        So we need to generate $p_3$ such that $(\frac{-3}{p_3}) = 1$ and $p_3 \bmod 4 = 3$. We need to generate $p_4$ s.t.
+        $p_4 \bmod 4 = 1$.
+
+        Then we can simply apply the CTR to find $p$ as in part 2.
+
+    \section{11.2}
+        The algorithm is based on binary search (see \cite{power}). The idea is simply to test for every prime $p$ smaller than $\log n$ if $n = x^p$ for some $x\in \mathbb{N}$.
+        So we first apply a sieve to find primes smaller than $\log n$ (for example Eratosthene runs in $O(\log n \log\log\log n))$). For each prime $p$
+        we use binary search to see whether $n$ is a $p$-th power. The binary search is done as follows:
+        \begin{enumerate}
+            \item The search interval is $[2,2^{\lfloor \log n / p \rfloor + 1}]$
+            \item At every iteration we pick the middle of the interval $x$. Supposing our current search interval is $[a,b]$:
+                \begin{enumerate}
+                    \item if $x^p = n$ then accept.
+                    \item if $x^p < n$ then search in interval $[a,x-1]$
+                    \item if $x^p > n$ then search in interval $[x+1,b]$
+                \end{enumerate}
+                If only two possible integer remain in the interval then compute $a^p$ and $b^p$. If none of this power are equal to $n$ then reject.
+                If only one possible integer remain in the interval then compute $a^p = b^p$ and if it is not equal to $n$ then reject.
+        \end{enumerate}
+        The number of steps of the binary search is $O(\log n / p)$ and each step runs in $O(\log^2n)$ because multiplication of two number of $l$ bits can be done in $O(l^2)$
+        and if we use exponentiation by squaring to compute the power of $x$. The principle is to apply this recursively:
+        \[
+            x^p = \left\{ 
+                \begin{array}{l l}
+                    \left(x^{p/2}\right)^2 & \quad\mbox{if $p$ is even}\\
+               x\left(x^{(p-1)/2}\right)^2 & \quad\mbox{if $p$ is odd.}\\
+                \end{array}\right.
+        \]
+        We get the following complexiy: $O(\sum_{q=1}^{p}\frac{\log^2n}{q^2})$, but $\sum_{q=1}^{p}\frac{1}{q^2} \leq \pi/6$
+        Hence the complexity in $O(\log^2n)$.
+        Therefore the overall binary search takes $O(\log^3n/p)$.
+
+        Finally the complexity of the algorithm is the complexity of the binary search plus the complexity of the sieve:
+        \[
+            \log n \log\log\log n + \sum_{p \leq \log n : p\:\mathrm{prime}} \frac 1 p \log^3 n
+        \]
+        But $\sum_{p \leq \log n}{1/p}$ is in $O(\log\log\log n)$ (see \cite{prime}).
+        Thus we get a complexity of \[O(\log^3n\log\log\log n).\] This is roughly a cubic polynomial time algorithm.
+
+    \section{11.3}
+        Let $m$ be the number of distinct prime factors of $n$.
+        First it is easy to see that the couple $(x,y)$ cannot be used only when $x = y$ and $x = -y$. Because we want to compute $\gcd(x^2-y^2,n) = \gcd((x+y)(x-y),n)$.
+        So let us compute the probability that the couple is useless.         
+        By the CRT we have $x^2 \equiv y^2 \pmod n$ if and only if
+        \[
+            x^2 \equiv y^2 \pmod{p^k} \quad \text{, for every prime power $p^k$ factor of $n$.}
+        \]
+        Now note that when $x \equiv y \pmod{p^k}$ for every $p^k$, the couple is useless as every prime power factor divides $x^2-y^2$ and thus the gcd would give $n$.
+        Similarly when $x \equiv -y \pmod{p^k}$ for every $p^k$, the couple is useless.
+        
+        Consider the following lemma. We will use it to compute the probability. It simply says that an quadratic residue has two roots in finite field of prime caracteristic.
+        \begin{lemma}
+            $x^2$ has only two roots modulo an odd prime power $p^k$ and the roots are $x$ and $-x$.
+            Or saying this differently if $x^2 \equiv y^2 \pmod{p^k}$ then $x \equiv y \pmod{p^k}$ or $x \equiv -y \pmod{p^k}$.
+        \end{lemma}
+        \begin{proof}
+        Suppose $x^2 \equiv y^2 \equiv s \pmod{p^k}$ with $\gcd(s,p) = 1$ (we can suppose that the gcd is one because otherwise 
+        $a = s\cdot p$, $\left(\frac{sp}{p^k}\right) = k\left(\frac{sp}{p}\right) = 0$ and $a$ would not be a quadratic residue). 
+        So $p^k \mid (x+y)(x-y)$ and $p \mid (x+y)(x-y)$.
+        If $p$ divides both $(x+y)$ and $(x-y)$ then $p$ would divide the sum and the difference namely $2x$ and $-2y$.
+        But since $p$ is odd, then $p$ would divides both $x$ and $y$. This implies that $p$ would divides $x^2,y^2$ and $a$. This is impossible
+        since $\gcd(a,p^k)= 1$. Therefore $p$ divides either $(x+y)$ or $(x-y)$ but not both. Thus $p^k$ divides either $(x+y)$ or $(x-y)$.
+        Consequently we have $x\equiv y \pmod{p^k}$ or $x\equiv -y \pmod{p^k}$.
+        \end{proof}
+        We suppose that $n$ is a composite odd integer. Therefore we only have odd prime powers. So $\left\{
+            \begin{array}{l l r l} x &\equiv&  y & \pmod{p^k}\\
+                                   x &\equiv& -y & \pmod{p^k}\\
+        \end{array}\right\}$ which means that there are $2^m$ possible $x$ and $y$ such that $x^2 \equiv y^2 \pmod n$.
+        The probability that $x \equiv y \pmod{p^k}$ for every $p^k$ is $1/2^m$. Similarly, we find that the probability that $x \equiv -y \pmod{p^k}$ for every $p^k$ is $1/2^m$.
+        Thus the probability that the couple is useless is equal to $1/2^{m-1}$.
+
+        Therefore the probability that we can use the couple $(x,y)$ is equal to one minus the probability that the couple is useless:
+        \[ 
+            1 - \frac{1}{2^{m-1}} \quad\text{, where $m$ is the number of distinct prime factors.}
+        \]
+
+    \begin{thebibliography}{1}
+    \bibitem{power}
+        Eric Bach and Jonathan P. Sorenson. Sieve Algorithm for Perfect Power Testing.
+        In \emph{Algorithmica 9,4:313-328}, volume 9, pages 313-328. 1993. 
+    \bibitem{prime}
+        J. B. Rosser and L. Schoenfeld. Approximate formulas for some functions of prime numbers. 
+        In \emph{Illinois Journal of Mathematics}, 6:64-94. 1962.
+    \end{thebibliography}
+
+\end{document}
