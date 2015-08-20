@@ -1,0 +1,29 @@
+Compiling the three programs:
+
+gcc -O2 -o badadd badadd.c
+gcc -o checkadd checkadd.c -lgmp
+gcc -o chgbase chgbase.c -lgmp
+
+All programs read numbers from stdin and output their result to stdout.
+chgbase requires two arguments, the other two programs no or one argument.
+
+badadd [ n ]: reads two decimal numbers a and b from stdin and does n times
+              the following computation a <- a+b , i.e., it computes a+n*b
+
+checkadd [n]: same as badadd, useful for checking the result
+
+chgbase ib ob: reads a number in base ib from stdin and output it in base ob
+               to stdout, bases can be in the interval [2,62], for hexadecimal
+               numbers lower or upper case letters can be used (see function
+               mpz_inp_str of gmp for more details);
+               caveat: not much error checking is done, e.g., 1234 in base 3
+               is interpreted as 12
+
+Examples:
+
+time ((echo "174316498273647891264182764916"; echo "138971038947123471239048723") | ./badadd 1000000)
+
+(echo "174316498273647891264182764916"; echo "138971038947123471239048723") | ./checkadd 1000000
+
+echo "b3212102be4" | ./chgbase 16 53
+

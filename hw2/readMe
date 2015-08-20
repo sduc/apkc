@@ -1,0 +1,15 @@
+The program 'add' takes two hexadecimal strings in input and output the sum a + b * n
+to make test easier we made a python script which take three agrument : a, b, n or the argument 'big' to do the test suggested in the orginial readme.
+The script test our implementation then check is with 'checkadd' and finaly give the time of the 'badadd' run.
+
+
+add [n] : read the two integer in heaxadecimal string from the input and output a + b * n
+          with the addition done n times and give the result in a hexadecimal string
+
+addtest.py a b n [ibase] : take two string of integer in base 'ibase' if given or 10 by default
+                           and call add / checkadd / badadd with there parameters to test
+                           speed and correctness of add.
+                           it ouput the result in base 10
+
+addtest.py big           : this default one argument call does the same as : 
+                           addtest.py 174316498273647891264182764916 138971038947123471239048723 1000000
